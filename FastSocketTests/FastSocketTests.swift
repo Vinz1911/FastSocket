@@ -15,7 +15,7 @@ class FastSocketTests: XCTestCase {
     
     func testDownload() {
         let exp = expectation(description: "Wait for speed test to finish")
-        let buffer = "1000000"
+        let buffer = "50000"
         var datacount = 0
         let socket = FastSocket(host: "socket.weist.it", port: 8080)
         socket.on.ready = {
@@ -39,7 +39,7 @@ class FastSocketTests: XCTestCase {
 
     func testUpload() {
         let exp = expectation(description: "Wait for speed test to finish")
-        let buffer = Data(count: 1000000)
+        let buffer = Data(count: 50000)
         var datacount = 0
         let socket = FastSocket(host: "socket.weist.it", port: 8080)
         socket.on.ready = {
