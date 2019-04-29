@@ -12,9 +12,9 @@ internal enum ControlCode: UInt8 {
     /// continue is currently a placeholder byte
     case `continue` = 0x0
     /// accept byte is used by the handshake
-    case accept = 0xFE
+    case accept = 0x06
     /// finish byte is used on every end of a message
-    case finish = 0xFF
+    case finish = 0x03
 }
 /// Opcodes are used to evaluate the message type
 internal enum Opcode: UInt8 {

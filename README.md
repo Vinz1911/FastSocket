@@ -64,37 +64,30 @@ socket.on.ready = {
     // this is called after the connection
     // was successfully established and is ready
 }
-
 socket.on.data = { data in
     // this is called everytime
     // a data message was received
 }
-
 socket.on.string = { string in
     // this is called everytime
     // a text message was received
 }
-
 socket.on.dataRead = { count in
     // this is called every 8192 bytes
     // are readed from the socket
 }
-
 socket.on.dataWritten = { count in
     // this is called every 8192 bytes
     // are written on the socket
 }
-
 socket.on.close = {
     // this is called after
     // the socket was closed
 }
-
 socket.on.error = { error in
     // this is called everytime
     // an error appeared
 }
-
 ```
 
 ## Connect:

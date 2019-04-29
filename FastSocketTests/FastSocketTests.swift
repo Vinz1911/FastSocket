@@ -89,9 +89,8 @@ class FastSocketTests: XCTestCase {
     
     func testFrameErrorUnknown() {
         let frame = Frame()
-        var data = Data(count: 2)
+        var data = Data(count: 1)
         data[0] = 0x3
-        data[1] = 0xFF
         XCTAssertThrowsError(try frame.parse(data: data)) { error in
             XCTAssertEqual(error as! FastSocketError, FastSocketError.unknownOpcode)
         }
