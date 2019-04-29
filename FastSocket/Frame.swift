@@ -42,7 +42,6 @@ internal class Frame: FrameProtocol {
             throw FastSocketError.zeroData
         }
         self.readBuffer.append(data)
-
         guard data.last == ControlCode.finish.rawValue else {
             // Do nothing, keep reading, keep walking
             return
@@ -67,7 +66,7 @@ internal class Frame: FrameProtocol {
 private extension Frame {
     /// helper function to parse the frame
     private func trimmedFrame() -> Data {
-        self.inputFrame = self.inputFrame.dropFirst()
+        self.inputFrame = self.readBuffer.dropFirst()
         self.inputFrame = self.inputFrame.dropLast()
         return self.inputFrame
     }
