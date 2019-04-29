@@ -23,6 +23,7 @@ class FastSocketTests: XCTestCase {
         }
         socket.on.data = { data in
             print("RECEIVED THIS COUNT: \(data.count)")
+            XCTAssertEqual(data.count, Int(buffer))
             exp.fulfill()
         }
         socket.on.dataRead = { count in
@@ -47,6 +48,7 @@ class FastSocketTests: XCTestCase {
         }
         socket.on.string = { text in
             print("RECEIVED THIS COUNT: \(text)")
+            XCTAssertEqual(buffer.count, Int(text))
             exp.fulfill()
         }
         socket.on.dataWritten = { count in
