@@ -14,5 +14,5 @@ internal enum Constant {
     /// the FastSocket ID used by the handshake
     static let socketID: String = "6D8EDFD9-541C-4391-9171-AD519876B32E"
     /// timeout time
-    static let timeout: TimeInterval = 3.0
+    static let timeout: TimeInterval = 5.0
 }

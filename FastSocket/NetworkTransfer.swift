@@ -16,7 +16,6 @@ internal class NetworkTransfer: TransferProtocol {
     private var monitor = NWPathMonitor()
     private var queue: DispatchQueue
     private var isRunning: Bool = false
-    private var isConnected: Bool = false
     private var mutexLock: Bool = false
     private var connectionState: NWConnection.State = .cancelled
     /// create a instance of NetworkTransfer
@@ -33,7 +32,7 @@ internal class NetworkTransfer: TransferProtocol {
     /// prevent reconnecting after a connection
     /// was successfully established
     internal func connect() {
-        guard !self.isConnected else {
+        guard !self.isRunning else {
             return
         }
         self.connectionStateHandler()
@@ -62,6 +61,7 @@ internal class NetworkTransfer: TransferProtocol {
             }
             self.mutexLock = true
             guard self.connectionState == .ready else {
+                self.on.error(FastSocketError.sendToEarly)
                 return
             }
             let queued = data.chunked(by: Constant.maximumLength)
@@ -94,7 +94,6 @@ private extension NetworkTransfer {
             self.connectionState = state
             if case .ready = state {
                 self.on.ready()
-                self.doConnect()
             }
             if case .waiting(let error) = state {
                 self.on.error(error)
@@ -107,19 +106,10 @@ private extension NetworkTransfer {
             }
         }
     }
-    /// helper on connecting
-    private func doConnect() {
-        guard !isConnected else {
-            return
-        }
-        self.isConnected = true
-        self.isRunning = true
-    }
     /// cleanup a connection
     /// on disconnect
     private func clean() {
         self.isRunning = false
-        self.isConnected = false
         self.connection.cancel()
     }
     /// a network path monitor

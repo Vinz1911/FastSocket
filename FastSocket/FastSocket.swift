@@ -22,7 +22,7 @@ public class FastSocket: FastSocketProtocol {
     private var frame = Frame()
     private var transfer: TransferProtocol?
     private var timer: DispatchSourceTimer?
-    private var locked = false
+    private var mutexLock = false
     /// create a instance of FastSocket
     /// - parameters:
     ///     - host: a server endpoint to connect, e.g.: "example.com"
@@ -38,7 +38,7 @@ public class FastSocket: FastSocketProtocol {
     /// try to establish a connection to a
     /// FastSocket compliant server
     public func connect() {
-        self.locked = false
+        self.mutexLock = false
         self.transfer = NetworkTransfer(host: self.host, port: self.port, parameters: self.parameters, queue: self.queue)
         self.transferClosures()
         self.frameClosures()
@@ -58,7 +58,7 @@ public class FastSocket: FastSocketProtocol {
     /// - parameters:
     ///     - data: the data that should be send
     public func send(data: Data) {
-        guard self.locked else {
+        guard self.mutexLock else {
             self.clean(FastSocketError.sendToEarly)
             return
         }
@@ -72,7 +72,7 @@ public class FastSocket: FastSocketProtocol {
     /// - parameters:
     ///     - string: the string that should be send
     public func send(string: String) {
-        guard self.locked else {
+        guard self.mutexLock else {
             self.clean(FastSocketError.sendToEarly)
             return
         }
@@ -97,8 +97,8 @@ private extension FastSocket {
     }
     /// send the handshake frame
     private func handShake() {
-        let keyData = Constant.socketID.data(using: .utf8)
-        self.transfer?.send(data: keyData!)
+        let socketIDData = Constant.socketID.data(using: .utf8)
+        self.transfer?.send(data: socketIDData!)
     }
     /// closures from the transfer protocol
     /// handles incoming data and handshake
@@ -107,21 +107,21 @@ private extension FastSocket {
             self.handShake()
         }
         self.transfer?.on.data = { data in
-            if self.locked {
+            if self.mutexLock {
                 do {
                     try self.frame.parse(data: data)
                 } catch {
                     self.clean(error)
                 }
             }
-            if !self.locked {
-                guard data.first == ControlCode.accept.rawValue else {
+            if !self.mutexLock {
+                guard data.first == OperationalCode.accept.rawValue else {
                     self.disconnect()
                     self.clean(FastSocketError.handShakeFailed)
                     self.clean(FastSocketError.socketUnexpectedClosed)
                     return
                 }
-                self.locked = true
+                self.mutexLock = true
                 self.clean(nil)
                 self.on.ready()
             }
