@@ -23,6 +23,8 @@ public enum FastSocketError: Int, Error {
     case socketClosed = 202
     /// thrown if socket was closed not normally
     case socketUnexpectedClosed = 203
+    /// thrown if try to write data before previous data was written
+    case writeBeforeClear = 204
     /// thrown if message parsing failed
     case parsingFailure = 300
     /// thrown if message parser get's zer0 data
@@ -61,6 +63,9 @@ public extension FastSocketError {
 
         case .socketUnexpectedClosed:
             return [NSLocalizedDescriptionKey: "socket was unexpected closed"]
+
+        case .writeBeforeClear:
+            return [NSLocalizedDescriptionKey: "previous data not finally written!, cannot write on socket"]
 
         case .parsingFailure:
             return [NSLocalizedDescriptionKey: "message parsing error, no valid UTF-8"]

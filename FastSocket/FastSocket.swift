@@ -29,7 +29,7 @@ public class FastSocket: FastSocketProtocol {
     ///     - port: the port to connect, e.g.: 8000
     ///     - parameters: Network.framework Parameters `optional`
     ///     - queue: Dispatch Queue `optional`
-    public required init(host: String, port: UInt16, queue: DispatchQueue = DispatchQueue(label: "FastSocket.Dispatch.\(UUID().uuidString)", qos: .background, attributes: .concurrent)) {
+    public required init(host: String, port: UInt16, queue: DispatchQueue = DispatchQueue(label: "FastSocket.Dispatch.\(UUID().uuidString)", qos: .userInitiated, attributes: .concurrent)) {
         self.host = host
         self.port = port
         self.queue = queue

@@ -13,10 +13,11 @@ import Network
 internal class NetworkTransfer: TransferProtocol {
     internal var on = TransferClosures()
     private var connection: NWConnection
-    private var monitor: NWPathMonitor
+    private var monitor = NWPathMonitor()
     private var queue: DispatchQueue
     private var isRunning: Bool = false
     private var isConnected: Bool = false
+    private var mutexLock: Bool = false
     private var connectionState: NWConnection.State = .cancelled
     /// create a instance of NetworkTransfer
     /// - parameters:
@@ -24,9 +25,8 @@ internal class NetworkTransfer: TransferProtocol {
     ///     - port: the port to connect, e.g.: 8000
     ///     - parameters: Network.framework Parameters `optional`
     ///     - queue: Dispatch Qeue `optional`
-    required init(host: String, port: UInt16, parameters: NWParameters = NWParameters(tls: nil), queue: DispatchQueue = DispatchQueue(label: "NetworkTransfer.Queue.\(UUID().uuidString)", qos: .background, attributes: .concurrent)) {
+    required init(host: String, port: UInt16, parameters: NWParameters = NWParameters(tls: nil), queue: DispatchQueue = DispatchQueue(label: "NetworkTransfer.Queue.\(UUID().uuidString)", qos: .userInitiated, attributes: .concurrent)) {
         self.connection = NWConnection(host: NWEndpoint.Host(host), port: NWEndpoint.Port(rawValue: port)!, using: parameters)
-        self.monitor = NWPathMonitor()
         self.queue = queue
     }
     /// connect to a host
@@ -52,17 +52,34 @@ internal class NetworkTransfer: TransferProtocol {
     /// - parameters:
     ///     - data: the data which should be written on the socket
     internal func send(data: Data) {
-        guard self.connectionState == .ready else {
-            return
-        }
-        let queued = data.chunked(by: Constant.maximumLength)
-        guard !queued.isEmpty else {
-            return
-        }
-        for i in 0...queued.count - 1 {
-            self.connection.send(content: Data(queued[i]), completion: .contentProcessed({ _ in
-                self.on.dataOutput(queued[i].count)
-            }))
+        self.connection.batch { [weak self] in
+            guard let self = self else {
+                return
+            }
+            guard !self.mutexLock else {
+                self.on.error(FastSocketError.writeBeforeClear)
+                return
+            }
+            self.mutexLock = true
+            guard self.connectionState == .ready else {
+                return
+            }
+            let queued = data.chunked(by: Constant.maximumLength)
+            guard !queued.isEmpty else {
+                return
+            }
+            for (i, data) in queued.enumerated() {
+                self.connection.send(content: Data(data), completion: .contentProcessed({ error in
+                    guard error == nil else {
+                        self.on.error(error)
+                        return
+                    }
+                    self.on.dataOutput(data.count)
+                    if i == queued.endIndex - 1 {
+                        self.mutexLock = false
+                    }
+                }))
+            }
         }
     }
 }
@@ -70,7 +87,10 @@ internal class NetworkTransfer: TransferProtocol {
 private extension NetworkTransfer {
     /// check connection state
     private func connectionStateHandler() {
-        self.connection.stateUpdateHandler = { state in
+        self.connection.stateUpdateHandler = { [weak self] state in
+            guard let self = self else {
+                return
+            }
             self.connectionState = state
             if case .ready = state {
                 self.on.ready()
@@ -105,14 +125,17 @@ private extension NetworkTransfer {
     /// a network path monitor
     /// used to detect if network is unrechable
     private func networkPathMonitor() {
-        self.monitor.pathUpdateHandler = { path in
+        self.monitor.pathUpdateHandler = { [weak self] path in
+            guard let self = self else {
+                return
+            }
             guard path.status == .unsatisfied else {
                 return
             }
             self.clean()
             self.on.error(FastSocketError.networkUnreachable)
         }
-        self.monitor.start(queue: self.queue)
+        self.monitor.start(queue: DispatchQueue(label: "NWPath.Queue.\(UUID().uuidString)", qos: .userInitiated))
     }
     /// readloop for the tcp socket incoming data
     private func readLoop() {
@@ -134,7 +157,6 @@ private extension NetworkTransfer {
                 self.on.data(data)
                 self.on.dataInput(data.count)
             }
-            // connection is dead and will be closed
             if isComplete && data == nil, context == nil, error == nil {
                 self.clean()
                 self.on.close()
