@@ -129,30 +129,35 @@ private extension NetworkTransfer {
     }
     /// readloop for the tcp socket incoming data
     private func readLoop() {
-        guard self.isRunning else {
-            return
-        }
-        self.connection.receive(minimumIncompleteLength: Constant.minimumIncompleteLength, maximumLength: Constant.maximumLength) { [weak self] data, context, isComplete, error in
+        self.connection.batch { [weak self] in
             guard let self = self else {
                 return
             }
-            if let error = error {
-                guard error != NWError.posix(POSIXErrorCode(rawValue: 89)!) else {
+            guard self.isRunning else {
+                return
+            }
+            self.connection.receive(minimumIncompleteLength: Constant.minimumIncompleteLength, maximumLength: Constant.maximumLength) { [weak self] data, context, isComplete, error in
+                guard let self = self else {
                     return
                 }
-                self.on.error(error)
-                return
+                if let error = error {
+                    guard error != NWError.posix(POSIXErrorCode(rawValue: 89)!) else {
+                        return
+                    }
+                    self.on.error(error)
+                    return
+                }
+                if let data = data {
+                    self.on.data(data)
+                    self.on.dataInput(data.count)
+                }
+                if isComplete && data == nil, context == nil, error == nil {
+                    self.clean()
+                    self.on.close()
+                    return
+                }
+                self.readLoop()
             }
-            if let data = data {
-                self.on.data(data)
-                self.on.dataInput(data.count)
-            }
-            if isComplete && data == nil, context == nil, error == nil {
-                self.clean()
-                self.on.close()
-                return
-            }
-            self.readLoop()
         }
     }
 }
