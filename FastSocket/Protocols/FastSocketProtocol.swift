@@ -14,6 +14,8 @@ import Network
 /// low level TCP communication protocol to measure TCP throughput performance. -> FastSocket is the answer
 /// FastSocket allows to enter all possible TCP Options if needed and is completely non-blocking and async, thanks to GCD
 public protocol FastSocketProtocol {
+    /// public access to the event based closures
+    var on: FastSocketClosures { get set }
     /// public access to the Network.framework parameter options
     /// that gives you the ability (for example) to define on which
     /// interface the traffic should be send
