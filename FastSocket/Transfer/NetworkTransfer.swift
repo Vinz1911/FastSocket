@@ -5,6 +5,7 @@
 //  Created by Vinzenz Weist on 25.03.19.
 //  Copyright © 2019 Vinzenz Weist. All rights reserved.
 //
+// swiftlint:disable closure_body_length
 import Network
 /// NetworkTransfer is a raw TCP transfer
 /// it uses the Network.framework. This is
@@ -59,18 +60,22 @@ internal class NetworkTransfer: TransferProtocol {
                 self.on.error(FastSocketError.writeBeforeClear)
                 return
             }
-            self.mutexLock = true
             guard self.connectionState == .ready else {
                 self.on.error(FastSocketError.sendToEarly)
                 return
             }
+            self.mutexLock = true
             let queued = data.chunked(by: Constant.maximumLength)
             guard !queued.isEmpty else {
                 return
             }
             for (i, data) in queued.enumerated() {
                 self.connection.send(content: Data(data), completion: .contentProcessed({ error in
-                    guard error == nil else {
+                    if let error = error {
+                        guard error != NWError.posix(.ECANCELED) else {
+                            // cancel error can be ignored
+                            return
+                        }
                         self.on.error(error)
                         return
                     }
@@ -140,7 +145,8 @@ private extension NetworkTransfer {
                     return
                 }
                 if let error = error {
-                    guard error != NWError.posix(POSIXErrorCode(rawValue: 89)!) else {
+                    guard error != NWError.posix(.ECANCELED) else {
+                        // cancel error can be ignored
                         return
                     }
                     self.on.error(error)
