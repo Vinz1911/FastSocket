@@ -109,8 +109,8 @@ class FastSocketTests: XCTestCase {
         transferClosures.ready()
         transferClosures.close()
         transferClosures.data(Data())
-        transferClosures.dataInput(Int())
-        transferClosures.dataOutput(Int())
+        transferClosures.dataRead(Int())
+        transferClosures.dataWritten(Int())
         transferClosures.error(FastSocketError.none)
         
         fastSocketClosures.ready()

@@ -125,8 +125,8 @@ private extension FastSocket {
         }
         self.transfer?.on.close = self.on.close
         self.transfer?.on.error = self.clean
-        self.transfer?.on.dataInput = self.on.dataRead
-        self.transfer?.on.dataOutput = self.on.dataWritten
+        self.transfer?.on.dataRead = self.on.dataRead
+        self.transfer?.on.dataWritten = self.on.dataWritten
     }
     /// closures from Frame
     /// returns the parsed messages

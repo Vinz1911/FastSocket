@@ -74,7 +74,7 @@ internal class NetworkTransfer: TransferProtocol {
                         self.on.error(error)
                         return
                     }
-                    self.on.dataOutput(data.count)
+                    self.on.dataWritten(data.count)
                     if i == queued.endIndex - 1 {
                         self.mutexLock = false
                     }
@@ -125,7 +125,7 @@ private extension NetworkTransfer {
             self.clean()
             self.on.error(FastSocketError.networkUnreachable)
         }
-        self.monitor.start(queue: DispatchQueue(label: "NWPath.Queue.\(UUID().uuidString)", qos: .userInitiated))
+        self.monitor.start(queue: DispatchQueue(label: "network.path.\(UUID().uuidString)", qos: .userInitiated))
     }
     /// readloop for the tcp socket incoming data
     private func readLoop() {
@@ -149,7 +149,7 @@ private extension NetworkTransfer {
                 }
                 if let data = data {
                     self.on.data(data)
-                    self.on.dataInput(data.count)
+                    self.on.dataRead(data.count)
                 }
                 if isComplete && data == nil, context == nil, error == nil {
                     self.clean()
