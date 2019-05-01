@@ -96,8 +96,8 @@ private extension FastSocket {
     }
     /// send the handshake frame
     private func handShake() {
-        let socketIDData = Constant.socketID.data(using: .utf8)
-        self.transfer?.send(data: socketIDData!)
+        let data = Constant.socketID.data(using: .utf8)
+        self.transfer?.send(data: data!)
     }
     /// closures from the transfer protocol
     /// handles incoming data and handshake

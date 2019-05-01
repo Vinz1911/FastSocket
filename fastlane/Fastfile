@@ -19,16 +19,21 @@ platform :ios do
 
   desc "Build with XCode tools"
   lane :build_xcode do
-    xcodebuild(
-      archive: false,
-      scheme: "FastSocket"
-    )
+    UI.message("Start building")
+      xcodebuild(
+        archive: nil,
+        scheme: "FastSocket"
+      )
+    UI.success("Finished building")
   end
 
-  lane :test_xcode do 
-    UI.message "Performing unit tests"
+  desc "Run unit tests"
+  lane :test_xcode do
+    UI.message("Performing unit tests")
+      # use scan file
       scan
-
+      
+      # gather coverage after run
       slather(
         proj: "FastSocket.xcodeproj",
         scheme: "FastSocket",
@@ -36,29 +41,33 @@ platform :ios do
         output_directory: "./fastlane/test_output/slather",
         cobertura_xml: true
       )
-
+      
+      # after slathering, report to codecov
       codecov_reporter(
         token: "91fd39fd-4849-4057-b98a-72039d7c15da"
       )
-    UI.success "Finished unit tests"
+    UI.success("Finished unit tests")
   end
 
   desc "Build with Carthage"
   lane :build_carthage do
+    # build with carthage
     carthage(
-      command: "build",       # One of: build, bootstrap, update, archive. (default: bootstrap)
-      no_skip_current: true,     # Don't skip building the current project (only for frameworks)
-      verbose: false,   # Print xcodebuild output inline
-      platform: "all",  # Define which platform to build for (one of ‘all’, ‘Mac’, ‘iOS’, ‘watchOS’, ‘tvOS‘, or comma-separated values of the formers except for ‘all’)
-      log_path: "carthage.log"    # Path to the xcode build output
+      command: "build",
+      no_skip_current: true,
+      verbose: false,
+      platform: "all",
+      log_path: "carthage.log"
     )
   end
 
+  desc "Create archive with carthage"
   lane :archive_carthage do
+    # archive with carthage
     carthage(
-      output: "FastSocket.framework.zip",      # Specify the output archive name (only for the archive command)
-      command: "archive",       # One of: build, bootstrap, update, archive. (default: bootstrap)
-      verbose: false,   # Print xcodebuild output inline
+      output: "FastSocket.framework.zip",
+      command: "archive",
+      verbose: false,
     )
   end
 
@@ -67,4 +76,5 @@ platform :ios do
     # get version from branch
     # update podspec, commit and push
   end
+
 end

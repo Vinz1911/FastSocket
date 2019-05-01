@@ -25,6 +25,7 @@
 		AC55EDAC2253B37C00D4063A /* FastSocket.podspec in Resources */ = {isa = PBXBuildFile; fileRef = AC55EDAB2253B37C00D4063A /* FastSocket.podspec */; };
 		AC635E06226549AA00CFFBAD /* FastSocketProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC635E05226549AA00CFFBAD /* FastSocketProtocol.swift */; };
 		AC86306722771B78002C553C /* FrameProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC86306622771B78002C553C /* FrameProtocol.swift */; };
+		AC93AF9C2279EC150038B86D /* Fastfile in Resources */ = {isa = PBXBuildFile; fileRef = AC93AF9B2279EC150038B86D /* Fastfile */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		AC55EDAB2253B37C00D4063A /* FastSocket.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; fileEncoding = 4; path = FastSocket.podspec; sourceTree = "<group>"; };
 		AC635E05226549AA00CFFBAD /* FastSocketProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastSocketProtocol.swift; sourceTree = "<group>"; };
 		AC86306622771B78002C553C /* FrameProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameProtocol.swift; sourceTree = "<group>"; };
+		AC93AF9B2279EC150038B86D /* Fastfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; fileEncoding = 4; name = Fastfile; path = fastlane/Fastfile; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,6 +191,7 @@
 		AC93AF9A2279E4C20038B86D /* Podspec+Readme */ = {
 			isa = PBXGroup;
 			children = (
+				AC93AF9B2279EC150038B86D /* Fastfile */,
 				AC55EDAB2253B37C00D4063A /* FastSocket.podspec */,
 				AC1536F5227341FF00F3A2E2 /* README.md */,
 			);
@@ -290,6 +293,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC93AF9C2279EC150038B86D /* Fastfile in Resources */,
 				AC1536F6227341FF00F3A2E2 /* README.md in Resources */,
 				AC55EDAC2253B37C00D4063A /* FastSocket.podspec in Resources */,
 			);
