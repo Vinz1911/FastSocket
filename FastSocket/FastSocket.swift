@@ -114,7 +114,7 @@ private extension FastSocket {
                 }
             }
             if !self.mutexLock {
-                guard data.first == OperationalCode.accept.rawValue else {
+                guard data.first == Opcode.accept.rawValue else {
                     self.disconnect()
                     self.clean(FastSocketError.handShakeFailed)
                     self.clean(FastSocketError.socketUnexpectedClosed)

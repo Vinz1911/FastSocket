@@ -26,12 +26,12 @@ internal class Frame: FrameProtocol {
     /// create a FastSocket Protocol compliant message frame
     /// - parameters:
     ///     - data: the data that should be send
-    ///     - opcode: the frames opcode, e.g. .binary or .text
-    internal func create(data: Data, opcode: ControlCode) -> Data {
+    ///     - opcode: the frames Opcode, e.g. .binary or .text
+    internal func create(data: Data, opcode: Opcode) -> Data {
         self.outputFrame = Data()
         self.outputFrame.append(opcode.rawValue)
         self.outputFrame.append(data)
-        self.outputFrame.append(OperationalCode.finish.rawValue)
+        self.outputFrame.append(Opcode.finish.rawValue)
         return self.outputFrame
     }
     /// parse a FastSocket Protocol compliant messsage back to it's raw data
@@ -42,7 +42,7 @@ internal class Frame: FrameProtocol {
             throw FastSocketError.zeroData
         }
         self.readBuffer.append(data)
-        guard data.last == OperationalCode.finish.rawValue else {
+        guard data.last == Opcode.finish.rawValue else {
             // Do nothing, keep reading, keep walking
             return
         }
@@ -50,10 +50,10 @@ internal class Frame: FrameProtocol {
             throw FastSocketError.readBufferIssue
         }
         switch opcode {
-        case ControlCode.string.rawValue:
+        case Opcode.string.rawValue:
             self.on.stringFrame(self.trimmedFrame())
 
-        case ControlCode.binary.rawValue:
+        case Opcode.binary.rawValue:
             self.on.dataFrame(self.trimmedFrame())
 
         default:
