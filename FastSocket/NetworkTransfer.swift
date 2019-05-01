@@ -24,7 +24,7 @@ internal class NetworkTransfer: TransferProtocol {
     ///     - port: the port to connect, e.g.: 8000
     ///     - parameters: Network.framework Parameters `optional`
     ///     - queue: Dispatch Qeue `optional`
-    required init(host: String, port: UInt16, parameters: NWParameters = NWParameters(tls: nil), queue: DispatchQueue = DispatchQueue(label: "NetworkTransfer.Queue.\(UUID().uuidString)", qos: .userInitiated, attributes: .concurrent)) {
+    required init(host: String, port: UInt16, parameters: NWParameters = NWParameters(tls: nil), queue: DispatchQueue = DispatchQueue(label: "network.transfer.\(UUID().uuidString)", qos: .userInitiated)) {
         self.connection = NWConnection(host: NWEndpoint.Host(host), port: NWEndpoint.Port(rawValue: port)!, using: parameters)
         self.queue = queue
     }
@@ -35,11 +35,11 @@ internal class NetworkTransfer: TransferProtocol {
         guard !self.isRunning else {
             return
         }
+        self.isRunning = true
         self.connectionStateHandler()
         self.networkPathMonitor()
-        self.connection.start(queue: self.queue)
-        self.isRunning = true
         self.readLoop()
+        self.connection.start(queue: self.queue)
     }
     /// disconnect from host and
     /// cleanup the connection

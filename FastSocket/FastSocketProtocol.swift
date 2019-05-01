@@ -16,8 +16,7 @@ public protocol FastSocketProtocol {
     /// - parameters:
     ///     - host: a server endpoint to connect, e.g.: "example.com"
     ///     - port: the port to connect, e.g.: 8000
-    ///     - queue: Dispatch Queue `optional`
-    init(host: String, port: UInt16, queue: DispatchQueue)
+    init(host: String, port: UInt16)
     /// connect to the server
     /// try to establish a connection to a
     /// FastSocket compliant server

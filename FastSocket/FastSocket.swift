@@ -18,7 +18,6 @@ public class FastSocket: FastSocketProtocol {
     public var parameters = NWParameters(tls: nil)
     private var host: String
     private var port: UInt16
-    private var queue: DispatchQueue
     private var frame = Frame()
     private var transfer: TransferProtocol?
     private var timer: DispatchSourceTimer?
@@ -28,18 +27,16 @@ public class FastSocket: FastSocketProtocol {
     ///     - host: a server endpoint to connect, e.g.: "example.com"
     ///     - port: the port to connect, e.g.: 8000
     ///     - parameters: Network.framework Parameters `optional`
-    ///     - queue: Dispatch Queue `optional`
-    public required init(host: String, port: UInt16, queue: DispatchQueue = DispatchQueue(label: "FastSocket.Dispatch.\(UUID().uuidString)", qos: .userInitiated, attributes: .concurrent)) {
+    public required init(host: String, port: UInt16) {
         self.host = host
         self.port = port
-        self.queue = queue
     }
     /// connect to the server
     /// try to establish a connection to a
     /// FastSocket compliant server
     public func connect() {
         self.mutexLock = false
-        self.transfer = NetworkTransfer(host: self.host, port: self.port, parameters: self.parameters, queue: self.queue)
+        self.transfer = NetworkTransfer(host: self.host, port: self.port, parameters: self.parameters)
         self.transferClosures()
         self.frameClosures()
         self.transfer?.connect()
