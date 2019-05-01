@@ -12,8 +12,6 @@
 		23795EF922569A5800622CB4 /* Data+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23795EF822569A5800622CB4 /* Data+Extensions.swift */; };
 		AC0EF7BA227078DC00024EA5 /* Timer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0EF7B9227078DC00024EA5 /* Timer+Extension.swift */; };
 		AC1536F6227341FF00F3A2E2 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = AC1536F5227341FF00F3A2E2 /* README.md */; };
-		AC1536FC2273949900F3A2E2 /* config.yml in Resources */ = {isa = PBXBuildFile; fileRef = AC1536FB2273949900F3A2E2 /* config.yml */; };
-		AC1536FE227395D700F3A2E2 /* Fastfile in Resources */ = {isa = PBXBuildFile; fileRef = AC1536FD227395D700F3A2E2 /* Fastfile */; };
 		AC55ED8A2253B1ED00D4063A /* FastSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC55ED802253B1ED00D4063A /* FastSocket.framework */; };
 		AC55ED8F2253B1ED00D4063A /* FastSocketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC55ED8E2253B1ED00D4063A /* FastSocketTests.swift */; };
 		AC55ED912253B1ED00D4063A /* FastSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = AC55ED832253B1ED00D4063A /* FastSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -45,8 +43,6 @@
 		23795EF822569A5800622CB4 /* Data+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extensions.swift"; sourceTree = "<group>"; };
 		AC0EF7B9227078DC00024EA5 /* Timer+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Timer+Extension.swift"; sourceTree = "<group>"; };
 		AC1536F5227341FF00F3A2E2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		AC1536FB2273949900F3A2E2 /* config.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = config.yml; path = .circleci/config.yml; sourceTree = "<group>"; };
-		AC1536FD227395D700F3A2E2 /* Fastfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Fastfile; path = fastlane/Fastfile; sourceTree = "<group>"; };
 		AC55ED802253B1ED00D4063A /* FastSocket.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FastSocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC55ED832253B1ED00D4063A /* FastSocket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FastSocket.h; sourceTree = "<group>"; };
 		AC55ED842253B1ED00D4063A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -84,39 +80,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		23795EF422569A0800622CB4 /* Constants */ = {
-			isa = PBXGroup;
-			children = (
-				23795EF522569A2B00622CB4 /* Constants.swift */,
-				AC55EDA22253B21800D4063A /* Reference.swift */,
-			);
-			name = Constants;
-			sourceTree = "<group>";
-		};
-		23795EF722569A4200622CB4 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				23795EF822569A5800622CB4 /* Data+Extensions.swift */,
-				AC0EF7B9227078DC00024EA5 /* Timer+Extension.swift */,
-			);
-			name = Extensions;
-			sourceTree = "<group>";
-		};
-		AC1536F22270D1A300F3A2E2 /* Transfer */ = {
-			isa = PBXGroup;
-			children = (
-				AC55EDA02253B21800D4063A /* NetworkTransfer.swift */,
-			);
-			name = Transfer;
-			sourceTree = "<group>";
-		};
 		AC55ED762253B1ED00D4063A = {
 			isa = PBXGroup;
 			children = (
-				AC55EDAB2253B37C00D4063A /* FastSocket.podspec */,
-				AC1536FB2273949900F3A2E2 /* config.yml */,
-				AC1536FD227395D700F3A2E2 /* Fastfile */,
-				AC1536F5227341FF00F3A2E2 /* README.md */,
+				AC93AF9A2279E4C20038B86D /* Podspec+Readme */,
 				AC55ED822253B1ED00D4063A /* FastSocket */,
 				AC55ED8D2253B1ED00D4063A /* FastSocketTests */,
 				AC55ED812253B1ED00D4063A /* Products */,
@@ -136,12 +103,12 @@
 			isa = PBXGroup;
 			children = (
 				AC55ED9F2253B21800D4063A /* FastSocket.swift */,
-				AC1536F22270D1A300F3A2E2 /* Transfer */,
-				AC8138832253B57D0035733B /* Error */,
-				AC8138822253B5680035733B /* Protocols */,
-				AC8138812253B55D0035733B /* Model */,
-				23795EF422569A0800622CB4 /* Constants */,
-				23795EF722569A4200622CB4 /* Extensions */,
+				AC93AF542279E33D0038B86D /* Transfer */,
+				AC93AF5E2279E4090038B86D /* Error */,
+				AC93AF5B2279E3EB0038B86D /* Protocols */,
+				AC93AF5A2279E3E40038B86D /* Model */,
+				AC93AF582279E3D60038B86D /* Constants */,
+				AC93AF562279E3BC0038B86D /* Extensions */,
 				AC55EDAA2253B21B00D4063A /* Support Files */,
 			);
 			path = FastSocket;
@@ -165,16 +132,42 @@
 			name = "Support Files";
 			sourceTree = "<group>";
 		};
-		AC8138812253B55D0035733B /* Model */ = {
+		AC93AF542279E33D0038B86D /* Transfer */ = {
+			isa = PBXGroup;
+			children = (
+				AC55EDA02253B21800D4063A /* NetworkTransfer.swift */,
+			);
+			path = Transfer;
+			sourceTree = "<group>";
+		};
+		AC93AF562279E3BC0038B86D /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				23795EF822569A5800622CB4 /* Data+Extensions.swift */,
+				AC0EF7B9227078DC00024EA5 /* Timer+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		AC93AF582279E3D60038B86D /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				23795EF522569A2B00622CB4 /* Constants.swift */,
+				AC55EDA22253B21800D4063A /* Reference.swift */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
+		AC93AF5A2279E3E40038B86D /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				AC55ED9C2253B21800D4063A /* Frame.swift */,
 				AC55ED9B2253B21800D4063A /* Closures.swift */,
 			);
-			name = Model;
+			path = Model;
 			sourceTree = "<group>";
 		};
-		AC8138822253B5680035733B /* Protocols */ = {
+		AC93AF5B2279E3EB0038B86D /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
 				AC55ED9E2253B21800D4063A /* TransferProtocol.swift */,
@@ -182,15 +175,24 @@
 				AC86306622771B78002C553C /* FrameProtocol.swift */,
 				23795EF12256976A00622CB4 /* Typealiases.swift */,
 			);
-			name = Protocols;
+			path = Protocols;
 			sourceTree = "<group>";
 		};
-		AC8138832253B57D0035733B /* Error */ = {
+		AC93AF5E2279E4090038B86D /* Error */ = {
 			isa = PBXGroup;
 			children = (
 				AC55ED9A2253B21800D4063A /* Error.swift */,
 			);
-			name = Error;
+			path = Error;
+			sourceTree = "<group>";
+		};
+		AC93AF9A2279E4C20038B86D /* Podspec+Readme */ = {
+			isa = PBXGroup;
+			children = (
+				AC55EDAB2253B37C00D4063A /* FastSocket.podspec */,
+				AC1536F5227341FF00F3A2E2 /* README.md */,
+			);
+			name = "Podspec+Readme";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -288,9 +290,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AC1536FC2273949900F3A2E2 /* config.yml in Resources */,
 				AC1536F6227341FF00F3A2E2 /* README.md in Resources */,
-				AC1536FE227395D700F3A2E2 /* Fastfile in Resources */,
 				AC55EDAC2253B37C00D4063A /* FastSocket.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

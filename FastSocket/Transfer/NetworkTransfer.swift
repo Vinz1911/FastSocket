@@ -107,7 +107,6 @@ private extension NetworkTransfer {
         }
     }
     /// cleanup a connection
-    /// on disconnect
     private func clean() {
         self.isRunning = false
         self.connection.cancel()

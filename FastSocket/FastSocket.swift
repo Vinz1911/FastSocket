@@ -83,6 +83,8 @@ public class FastSocket: FastSocketProtocol {
 
 private extension FastSocket {
     /// suspends timeout and report on error
+    /// - parameters:
+    ///     - error: the error `optional`
     private func clean(_ error: Error?) {
         if let timer = self.timer {
             timer.cancel()
