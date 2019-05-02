@@ -15,7 +15,7 @@
 /// Frame is a helper class for the FastSocket Protocol
 /// it is used to create new message frames or to parse
 /// received Data back to it's raw type
-internal class Frame: FrameProtocol {
+internal final class Frame: FrameProtocol {
     internal var on = FrameClosures()
     private var outputFrame = Data()
     private var inputFrame = Data()

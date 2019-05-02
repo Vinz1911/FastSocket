@@ -13,7 +13,7 @@ import Network
 /// The motivation behind this protocol was, to use it as `Speedtest Protocol`, a
 /// low level TCP communication protocol to measure TCP throughput performance. -> FastSocket is the answer
 /// FastSocket allows to enter all possible TCP Options if needed and is completely non-blocking and async, thanks to GCD
-public class FastSocket: FastSocketProtocol {
+public final class FastSocket: FastSocketProtocol {
     public var on = FastSocketClosures()
     public var parameters = NWParameters(tls: nil)
     private var host: String

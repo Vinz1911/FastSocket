@@ -14,10 +14,12 @@
 
 - [X] send and receive text and data messages
 - [X] async, non-blocking & very fast
+- [X] threading is handled by the framework itself
 - [X] track every 8192 send & received bytes
-- [X] custom error management
 - [X] allows you to chose the network interface!
-- [X] Zer0 dependencies, native swift implementation with Network.framework
+- [X] zer0 dependencies, native swift implementation with Network.framework
+- [X] custom error management
+- [X] all errors are routed through the error closure
 
 ## Build Status:
 
@@ -44,7 +46,7 @@ Add the following line to your `Cartfile`
 github "Vinz1911/FastSocket"
 ```
 
-### Swift Package
+### Swift Package Manager
 
     Not yet supported
 
