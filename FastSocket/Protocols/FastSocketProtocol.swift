@@ -32,12 +32,8 @@ public protocol FastSocketProtocol {
     /// disconnect from the server
     /// closes the connection `normally`
     func disconnect()
-    /// send a data message
+    /// generic send function, send data or string based messages
     /// - parameters:
-    ///     - data: the data that should be send
-    func send(data: Data)
-    /// send a string message
-    /// - parameters:
-    ///     - string: the string that should be send
-    func send(string: String)
+    ///     - message: generic type (accepts data or string)
+    func send<T: SendProtocol>(message: T)
 }

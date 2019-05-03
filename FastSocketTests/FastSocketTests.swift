@@ -19,7 +19,7 @@ class FastSocketTests: XCTestCase {
         var datacount = 0
         let socket = FastSocket(host: "socket.weist.it", port: 8080)
         socket.on.ready = {
-            socket.send(string: buffer)
+            socket.send(message: buffer)
         }
         socket.on.data = { data in
             print("RECEIVED THIS COUNT: \(data.count)")
@@ -29,6 +29,9 @@ class FastSocketTests: XCTestCase {
         socket.on.dataRead = { count in
             datacount += count
             print(datacount)
+        }
+        socket.on.close = {
+            print("connection closed")
         }
         socket.on.error = { error in
             guard let error = error else { return }
@@ -44,7 +47,7 @@ class FastSocketTests: XCTestCase {
         var datacount = 0
         let socket = FastSocket(host: "socket.weist.it", port: 8080)
         socket.on.ready = {
-            socket.send(data: buffer)
+            socket.send(message: buffer)
         }
         socket.on.string = { text in
             print("RECEIVED THIS COUNT: \(text)")
@@ -54,6 +57,9 @@ class FastSocketTests: XCTestCase {
         socket.on.dataWritten = { count in
             datacount += count
             print(datacount)
+        }
+        socket.on.close = {
+            print("connection closed")
         }
         socket.on.error = { error in
             guard let error = error else { return }
@@ -98,6 +104,14 @@ class FastSocketTests: XCTestCase {
         }
     }
     
+    func testFrameOverflow() {
+        let frame = Frame()
+        let data = Data(count: 17000000)
+        XCTAssertThrowsError(try frame.create(data: data, opcode: .binary)) { error in
+            XCTAssertEqual(error as! FastSocketError, FastSocketError.writeBufferOverflow)
+        }
+    }
+    
     func testClosureCall() {
         let frameClosures = FrameClosures()
         let transferClosures = TransferClosures()
@@ -127,7 +141,7 @@ class FastSocketTests: XCTestCase {
         socket.on.error = { error in
             XCTAssertEqual(error as! FastSocketError, FastSocketError.sendToEarly)
         }
-        socket.send(string: "")
+        socket.send(message: "")
     }
     
     func testSendDataError() {
@@ -135,7 +149,7 @@ class FastSocketTests: XCTestCase {
         socket.on.error = { error in
             XCTAssertEqual(error as! FastSocketError, FastSocketError.sendToEarly)
         }
-        socket.send(data: Data())
+        socket.send(message: Data())
     }
     
     func testError() {
@@ -153,10 +167,12 @@ class FastSocketTests: XCTestCase {
         XCTAssertEqual(FastSocketError.zeroData.errorUserInfo["NSLocalizedDescription"], "data is empty cannot parse into message")
         XCTAssertEqual(FastSocketError.readBufferIssue.errorUserInfo["NSLocalizedDescription"], "readbuffer issue, is empty or wrong data")
         XCTAssertEqual(FastSocketError.unknownOpcode.errorUserInfo["NSLocalizedDescription"], "unknown opcode, cannot parse message")
+        XCTAssertEqual(FastSocketError.readBufferOverflow.errorUserInfo["NSLocalizedDescription"], "readbuffer overflow!")
+        XCTAssertEqual(FastSocketError.writeBufferOverflow.errorUserInfo["NSLocalizedDescription"], "writebuffer overflow!")
         XCTAssertEqual(FastSocketError.none.errorCode, 0)
     }
     
-    func testATimer() {
+    func testTimer() {
         let exp = expectation(description: "Timer")
         var isCalledTwice = false
         self.timer = Timer.interval(interval: 1.0, withRepeat: true) {

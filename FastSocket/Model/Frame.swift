@@ -17,8 +17,6 @@
 /// received Data back to it's raw type
 internal final class Frame: FrameProtocol {
     internal var on = FrameClosures()
-    private var outputFrame = Data()
-    private var inputFrame = Data()
     private var readBuffer = Data()
 
     internal required init() {
@@ -27,12 +25,15 @@ internal final class Frame: FrameProtocol {
     /// - parameters:
     ///     - data: the data that should be send
     ///     - opcode: the frames Opcode, e.g. .binary or .text
-    internal func create(data: Data, opcode: Opcode) -> Data {
-        self.outputFrame = Data()
-        self.outputFrame.append(opcode.rawValue)
-        self.outputFrame.append(data)
-        self.outputFrame.append(Opcode.finish.rawValue)
-        return self.outputFrame
+    internal func create(data: Data, opcode: Opcode) throws -> Data {
+        var outputFrame = Data()
+        outputFrame.append(opcode.rawValue)
+        outputFrame.append(data)
+        outputFrame.append(Opcode.finish.rawValue)
+        guard outputFrame.count <= Constant.maximumContentLength else {
+            throw FastSocketError.writeBufferOverflow
+        }
+        return outputFrame
     }
     /// parse a FastSocket Protocol compliant messsage back to it's raw data
     /// - parameters:
@@ -42,6 +43,9 @@ internal final class Frame: FrameProtocol {
             throw FastSocketError.zeroData
         }
         self.readBuffer.append(data)
+        if self.readBuffer.count > Constant.maximumContentLength {
+            throw (FastSocketError.readBufferOverflow)
+        }
         guard data.last == Opcode.finish.rawValue else {
             // Do nothing, keep reading, keep walking
             return
@@ -59,20 +63,19 @@ internal final class Frame: FrameProtocol {
         default:
             throw FastSocketError.unknownOpcode
         }
-        initializeFrame()
+        self.initializeBuffer()
     }
 }
 
 private extension Frame {
     /// helper function to parse the frame
     private func trimmedFrame() -> Data {
-        self.inputFrame = self.readBuffer.dropFirst()
-        self.inputFrame = self.inputFrame.dropLast()
-        return self.inputFrame
+        var inputFrame = self.readBuffer.dropFirst()
+        inputFrame = inputFrame.dropLast()
+        return inputFrame
     }
     /// helper function to create readable frame
-    private func initializeFrame() {
+    private func initializeBuffer() {
         self.readBuffer = Data()
-        self.inputFrame = Data()
     }
 }

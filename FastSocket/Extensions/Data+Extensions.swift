@@ -5,6 +5,11 @@
 //  Created by Romero, Juan, SEVEN PRINCIPLES on 04.04.19.
 //  Copyright © 2019 Vinzenz Weist. All rights reserved.
 //
+
+extension Data: SendProtocol {
+    // conformance to send protocol
+}
+
 internal extension Data {
     /// slice data into chunks:
     /// - parameters:

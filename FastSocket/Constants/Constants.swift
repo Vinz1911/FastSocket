@@ -15,4 +15,6 @@ internal enum Constant {
     static let socketID: String = "6D8EDFD9-541C-4391-9171-AD519876B32E"
     /// timeout time
     static let timeout: TimeInterval = 5.0
+    /// maximum content size
+    static let maximumContentLength: Int = 16_777_216
 }

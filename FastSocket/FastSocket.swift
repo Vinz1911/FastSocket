@@ -5,6 +5,7 @@
 //  Created by Vinzenz Weist on 25.03.19.
 //  Copyright © 2019 Vinzenz Weist. All rights reserved.
 //
+// swiftlint:disable force_cast
 import Network
 /// FastSocket is a proprietary communication protocol directly
 /// written on top of TCP. It's a message based protocol which allows you
@@ -49,35 +50,38 @@ public final class FastSocket: FastSocketProtocol {
             return
         }
         transfer.disconnect()
-        self.clean(nil)
+        self.stopTimeout()
     }
-    /// send a data message
+    /// generic send function, send data or string based messages
     /// - parameters:
-    ///     - data: the data that should be send
-    public func send(data: Data) {
+    ///     - message: generic type (accepts data or string)
+    public func send<T: SendProtocol>(message: T) {
         guard self.mutexLock else {
-            self.clean(FastSocketError.sendToEarly)
             return
         }
-        let frame = self.frame.create(data: data, opcode: .binary)
         guard let transfer = self.transfer else {
             return
         }
-        transfer.send(data: frame)
-    }
-    /// send a string message
-    /// - parameters:
-    ///     - string: the string that should be send
-    public func send(string: String) {
-        guard self.mutexLock else {
-            self.clean(FastSocketError.sendToEarly)
-            return
+        switch type(of: message) {
+        case is String.Type:
+            do {
+                let frame = try self.frame.create(data: (message as! String).data(using: .utf8)!, opcode: .string)
+                transfer.send(data: frame)
+            } catch {
+                self.onError(error)
+            }
+
+        case is Data.Type:
+            do {
+                let frame = try self.frame.create(data: message as! Data, opcode: .binary)
+                transfer.send(data: frame)
+            } catch {
+                self.onError(error)
+            }
+
+        default:
+            break
         }
-        let frame = self.frame.create(data: string.data(using: .utf8)!, opcode: .string)
-        guard let transfer = self.transfer else {
-            return
-        }
-        transfer.send(data: frame)
     }
 }
 
@@ -85,7 +89,7 @@ private extension FastSocket {
     /// suspends timeout and report on error
     /// - parameters:
     ///     - error: the error `optional`
-    private func clean(_ error: Error?) {
+    private func onError(_ error: Error?) {
         if let timer = self.timer {
             timer.cancel()
         }
@@ -93,6 +97,7 @@ private extension FastSocket {
             return
         }
         self.on.error(error)
+        self.disconnect()
     }
     /// send the handshake frame
     private func handShake() {
@@ -110,23 +115,22 @@ private extension FastSocket {
                 do {
                     try self.frame.parse(data: data)
                 } catch {
-                    self.clean(error)
+                    self.onError(error)
                 }
             }
             if !self.mutexLock {
                 guard data.first == Opcode.accept.rawValue else {
-                    self.disconnect()
-                    self.clean(FastSocketError.handShakeFailed)
-                    self.clean(FastSocketError.socketUnexpectedClosed)
+                    self.onError(FastSocketError.handShakeFailed)
+                    self.onError(FastSocketError.socketUnexpectedClosed)
                     return
                 }
                 self.mutexLock = true
-                self.clean(nil)
+                self.stopTimeout()
                 self.on.ready()
             }
         }
         self.transfer?.on.close = self.on.close
-        self.transfer?.on.error = self.clean
+        self.transfer?.on.error = self.onError
         self.transfer?.on.dataRead = self.on.dataRead
         self.transfer?.on.dataWritten = self.on.dataWritten
     }
@@ -135,7 +139,7 @@ private extension FastSocket {
     private func frameClosures() {
         self.frame.on.stringFrame = { data in
             guard let string = String(data: data, encoding: .utf8) else {
-                self.clean(FastSocketError.parsingFailure)
+                self.onError(FastSocketError.parsingFailure)
                 return
             }
             self.on.string(string)
@@ -148,8 +152,14 @@ private extension FastSocket {
     /// start timeout on connecting
     private func startTimeout() {
         self.timer = Timer.interval(interval: Constant.timeout, withRepeat: false) {
-            self.disconnect()
-            self.clean(FastSocketError.timeoutError)
+            self.onError(FastSocketError.timeoutError)
         }
+    }
+    /// stop timeout
+    private func stopTimeout() {
+        guard let timer = self.timer else {
+            return
+        }
+        timer.cancel()
     }
 }

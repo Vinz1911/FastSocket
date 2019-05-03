@@ -31,6 +31,10 @@ public enum FastSocketError: Int, Error {
     case zeroData = 301
     /// thrown if something werid happen to the readbuffer
     case readBufferIssue = 302
+    /// thrown if a readbuffer overflow is encountered
+    case readBufferOverflow = 303
+    /// thrown if a writebuffer overflow is encountered
+    case writeBufferOverflow = 304
     /// thrown if opcode was unknown
     case unknownOpcode = 1000
 }
@@ -75,6 +79,12 @@ public extension FastSocketError {
 
         case .readBufferIssue:
             return [NSLocalizedDescriptionKey: "readbuffer issue, is empty or wrong data"]
+
+        case .readBufferOverflow:
+            return [NSLocalizedDescriptionKey: "readbuffer overflow!"]
+
+        case .writeBufferOverflow:
+            return [NSLocalizedDescriptionKey: "writebuffer overflow!"]
 
         case .unknownOpcode:
             return [NSLocalizedDescriptionKey: "unknown opcode, cannot parse message"]
