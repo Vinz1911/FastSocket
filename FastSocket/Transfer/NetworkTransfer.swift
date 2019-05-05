@@ -166,7 +166,9 @@ private extension NetworkTransfer {
                     self.on.close()
                     return
                 }
-                self.readLoop()
+                if !isComplete {
+                    self.readLoop()
+                }
             }
         }
     }
