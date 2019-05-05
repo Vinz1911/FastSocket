@@ -5,6 +5,7 @@
 //  Created by Vinzenz Weist on 16.04.19.
 //  Copyright © 2019 Vinzenz Weist. All rights reserved.
 //
+import Foundation
 import Network
 /// FastSocket is a proprietary communication protocol directly
 /// written on top of TCP. It's a message based protocol which allows you

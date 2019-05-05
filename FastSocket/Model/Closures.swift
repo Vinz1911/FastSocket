@@ -5,12 +5,13 @@
 //  Created by Vinzenz Weist on 02.04.19.
 //  Copyright © 2019 Vinzenz Weist. All rights reserved.
 //
+import Foundation
 /// FrameClosures are used by the framing
 internal struct FrameClosures {
     /// provides if a dataframe was successfully passed
     internal var dataFrame: CallbackData = { _ in }
     /// provides if a stringframe was successfully passed
-    internal var stringFrame: CallbackData = { _ in }
+    internal var stringFrame: CallbackString = { _ in }
 }
 /// TransferClosures are used by the network transfer
 internal struct TransferClosures {

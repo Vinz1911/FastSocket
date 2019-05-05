@@ -5,11 +5,7 @@
 //  Created by Romero, Juan, SEVEN PRINCIPLES on 04.04.19.
 //  Copyright © 2019 Vinzenz Weist. All rights reserved.
 //
-
-extension Data: SendProtocol {
-    // conformance to send protocol
-}
-
+import Foundation
 internal extension Data {
     /// slice data into chunks:
     /// - parameters:
@@ -19,4 +15,8 @@ internal extension Data {
             Array(self[$0..<Swift.min($0 + size, self.count)])
         }
     }
+}
+
+extension Data: SendProtocol {
+    // conformance to send protocol
 }

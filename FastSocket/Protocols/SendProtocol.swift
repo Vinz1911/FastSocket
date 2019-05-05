@@ -7,7 +7,6 @@
 //
 
 import Foundation
-
 public protocol SendProtocol {
     // send protocol, make it compliant
     // to allowed message types

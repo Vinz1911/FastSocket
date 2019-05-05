@@ -5,6 +5,7 @@
 //  Created by Vinzenz Weist on 29.04.19.
 //  Copyright © 2019 Vinzenz Weist. All rights reserved.
 //
+import Foundation
 /// The framing protocol
 internal protocol FrameProtocol {
     var on: FrameClosures { get set }

@@ -5,6 +5,7 @@
 //  Created by Vinzenz Weist on 24.04.19.
 //  Copyright © 2019 Vinzenz Weist. All rights reserved.
 //
+import Foundation
 internal extension Timer {
     /// Creates and returns a DispatchSourceTimer
     /// - parameters:

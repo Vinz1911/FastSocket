@@ -6,6 +6,7 @@
 //  Copyright © 2019 Vinzenz Weist. All rights reserved.
 //
 // swiftlint:disable closure_body_length
+import Foundation
 import Network
 /// NetworkTransfer is a raw TCP transfer
 /// it uses the Network.framework. This is

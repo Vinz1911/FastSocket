@@ -104,7 +104,7 @@ class FastSocketTests: XCTestCase {
         }
     }
     
-    func testFrameOverflow() {
+    func testFrameErrorOverflow() {
         let frame = Frame()
         let data = Data(count: 17000000)
         XCTAssertThrowsError(try frame.create(data: data, opcode: .binary)) { error in
@@ -118,7 +118,7 @@ class FastSocketTests: XCTestCase {
         let fastSocketClosures = FastSocketClosures()
         
         frameClosures.dataFrame(Data())
-        frameClosures.stringFrame(Data())
+        frameClosures.stringFrame("")
         
         transferClosures.ready()
         transferClosures.close()

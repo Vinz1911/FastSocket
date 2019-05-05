@@ -6,6 +6,7 @@
 //  Copyright © 2019 Vinzenz Weist. All rights reserved.
 //
 // swiftlint:disable force_cast
+import Foundation
 import Network
 /// FastSocket is a proprietary communication protocol directly
 /// written on top of TCP. It's a message based protocol which allows you
@@ -40,7 +41,10 @@ public final class FastSocket: FastSocketProtocol {
         self.transfer = NetworkTransfer(host: self.host, port: self.port, parameters: self.parameters)
         self.transferClosures()
         self.frameClosures()
-        self.transfer?.connect()
+        guard let transfer = self.transfer else {
+            return
+        }
+        transfer.connect()
         self.startTimeout()
     }
     /// disconnect from the server
@@ -137,17 +141,8 @@ private extension FastSocket {
     /// closures from Frame
     /// returns the parsed messages
     private func frameClosures() {
-        self.frame.on.stringFrame = { data in
-            guard let string = String(data: data, encoding: .utf8) else {
-                self.onError(FastSocketError.parsingFailure)
-                return
-            }
-            self.on.string(string)
-        }
-
-        self.frame.on.dataFrame = { data in
-            self.on.data(data)
-        }
+        self.frame.on.stringFrame = self.on.string
+        self.frame.on.dataFrame = self.on.data
     }
     /// start timeout on connecting
     private func startTimeout() {

@@ -5,6 +5,7 @@
 //  Created by Romero, Juan, SEVEN PRINCIPLES on 04.04.19.
 //  Copyright © 2019 Vinzenz Weist. All rights reserved.
 //
+import Foundation
 /// Constants used by the protocol
 internal enum Constant {
     /// for tcp socket reading, minimum stream length

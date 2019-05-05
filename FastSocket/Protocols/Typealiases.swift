@@ -5,6 +5,7 @@
 //  Created by Romero, Juan, SEVEN PRINCIPLES on 04.04.19.
 //  Copyright © 2019 Vinzenz Weist. All rights reserved.
 //
+import Foundation
 /// typealias for a normal closure
 public typealias Callback = () -> Void
 /// typealias for a closure which returns some data

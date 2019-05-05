@@ -5,6 +5,7 @@
 //  Created by Vinzenz Weist on 02.04.19.
 //  Copyright © 2019 Vinzenz Weist. All rights reserved.
 //
+import Foundation
 /// Error handling for the FastSocket Protocol
 public enum FastSocketError: Int, Error {
     /// none is a placeholder

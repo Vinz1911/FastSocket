@@ -12,6 +12,7 @@
 // |   O P C O D E   |         Payload Data...      |  F I N B Y T E  |
 // +-----------------+------------------------------+-----------------+
 //
+import Foundation
 /// Frame is a helper class for the FastSocket Protocol
 /// it is used to create new message frames or to parse
 /// received Data back to it's raw type
@@ -55,7 +56,11 @@ internal final class Frame: FrameProtocol {
         }
         switch opcode {
         case Opcode.string.rawValue:
-            self.on.stringFrame(self.trimmedFrame())
+            if let string = String(bytes: self.trimmedFrame(), encoding: .utf8) {
+                self.on.stringFrame(string)
+            } else {
+                throw FastSocketError.parsingFailure
+            }
 
         case Opcode.binary.rawValue:
             self.on.dataFrame(self.trimmedFrame())

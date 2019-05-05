@@ -1,10 +1,11 @@
 //
-//  Reference.swift
+//  Opcodes.swift
 //  FastSocket
 //
 //  Created by Vinzenz Weist on 02.04.19.
 //  Copyright © 2019 Vinzenz Weist. All rights reserved.
 //
+import Foundation
 /// Opcodes are used to evaluate and control the framing,
 /// the handshake and the transfer process
 internal enum Opcode: UInt8 {
