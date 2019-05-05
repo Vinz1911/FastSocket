@@ -56,11 +56,10 @@ internal final class Frame: FrameProtocol {
         }
         switch opcode {
         case Opcode.string.rawValue:
-            if let string = String(bytes: self.trimmedFrame(), encoding: .utf8) {
-                self.on.stringFrame(string)
-            } else {
+            guard let string = String(bytes: self.trimmedFrame(), encoding: .utf8) else {
                 throw FastSocketError.parsingFailure
             }
+            self.on.stringFrame(string)
 
         case Opcode.binary.rawValue:
             self.on.dataFrame(self.trimmedFrame())
