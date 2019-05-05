@@ -98,17 +98,21 @@ private extension NetworkTransfer {
                 return
             }
             self.connectionState = state
-            if case .ready = state {
+            switch state {
+            case .ready:
                 self.on.ready()
-            }
-            if case .waiting(let error) = state {
+
+            case .waiting(let error):
                 self.on.error(error)
-            }
-            if case .failed(let error) = state {
+
+            case .failed(let error):
                 self.on.error(error)
-            }
-            if case .cancelled = state {
+
+            case .cancelled:
                 self.on.close()
+
+            default:
+                break
             }
         }
     }

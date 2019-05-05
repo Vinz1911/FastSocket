@@ -28,7 +28,6 @@ public final class FastSocket: FastSocketProtocol {
     /// - parameters:
     ///     - host: a server endpoint to connect, e.g.: "example.com"
     ///     - port: the port to connect, e.g.: 8000
-    ///     - parameters: Network.framework Parameters `optional`
     public required init(host: String, port: UInt16) {
         self.host = host
         self.port = port
@@ -115,14 +114,15 @@ private extension FastSocket {
             self.handShake()
         }
         self.transfer?.on.data = { data in
-            if self.mutexLock {
+            switch self.mutexLock {
+            case true:
                 do {
                     try self.frame.parse(data: data)
                 } catch {
                     self.onError(error)
                 }
-            }
-            if !self.mutexLock {
+
+            case false:
                 guard data.first == Opcode.accept.rawValue else {
                     self.onError(FastSocketError.handShakeFailed)
                     self.onError(FastSocketError.socketUnexpectedClosed)
