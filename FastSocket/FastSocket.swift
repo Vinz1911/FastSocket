@@ -104,16 +104,28 @@ private extension FastSocket {
     }
     /// send the handshake frame
     private func handShake() {
+        guard let transfer = self.transfer else {
+            return
+        }
         let data = Constant.socketID.data(using: .utf8)
-        self.transfer?.send(data: data!)
+        transfer.send(data: data!)
     }
     /// closures from the transfer protocol
     /// handles incoming data and handshake
     private func transferClosures() {
-        self.transfer?.on.ready = {
+        guard var transfer = self.transfer else {
+            return
+        }
+        transfer.on.ready = { [weak self] in
+            guard let self = self else {
+                return
+            }
             self.handShake()
         }
-        self.transfer?.on.data = { data in
+        transfer.on.data = { [weak self] data in
+            guard let self = self else {
+                return
+            }
             switch self.mutexLock {
             case true:
                 do {
@@ -133,10 +145,10 @@ private extension FastSocket {
                 self.on.ready()
             }
         }
-        self.transfer?.on.close = self.on.close
-        self.transfer?.on.error = self.onError
-        self.transfer?.on.dataRead = self.on.dataRead
-        self.transfer?.on.dataWritten = self.on.dataWritten
+        transfer.on.close = self.on.close
+        transfer.on.error = self.onError
+        transfer.on.dataRead = self.on.dataRead
+        transfer.on.dataWritten = self.on.dataWritten
     }
     /// closures from Frame
     /// returns the parsed messages
