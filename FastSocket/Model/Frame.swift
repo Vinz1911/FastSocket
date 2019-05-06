@@ -74,8 +74,7 @@ internal final class Frame: FrameProtocol {
 private extension Frame {
     /// helper function to parse the frame
     private func trimmedFrame() -> Data {
-        var inputFrame = self.readBuffer.dropFirst()
-        inputFrame = inputFrame.dropLast()
+        let inputFrame = self.readBuffer[1...self.readBuffer.count - 2]
         return inputFrame
     }
     /// helper function to create readable frame

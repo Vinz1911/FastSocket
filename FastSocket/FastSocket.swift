@@ -23,7 +23,7 @@ public final class FastSocket: FastSocketProtocol {
     private var frame = Frame()
     private var transfer: TransferProtocol?
     private var timer: DispatchSourceTimer?
-    private var mutexLock = false
+    private var isLocked = false
     /// create a instance of FastSocket
     /// - parameters:
     ///     - host: a server endpoint to connect, e.g.: "example.com"
@@ -36,7 +36,7 @@ public final class FastSocket: FastSocketProtocol {
     /// try to establish a connection to a
     /// FastSocket compliant server
     public func connect() {
-        self.mutexLock = false
+        self.isLocked = false
         self.transfer = NetworkTransfer(host: self.host, port: self.port, parameters: self.parameters)
         self.transferClosures()
         self.frameClosures()
@@ -58,29 +58,21 @@ public final class FastSocket: FastSocketProtocol {
     /// generic send function, send data or string based messages
     /// - parameters:
     ///     - message: generic type (accepts data or string)
-    public func send<T: SendProtocol>(message: T) {
-        guard self.mutexLock else {
+    public func send<T: SendProtocol>(message: T) throws {
+        guard self.isLocked else {
             return
         }
         guard let transfer = self.transfer else {
             return
         }
-        switch type(of: message) {
-        case is String.Type:
-            do {
-                let frame = try self.frame.create(data: (message as! String).data(using: .utf8)!, opcode: .string)
-                transfer.send(data: frame)
-            } catch {
-                self.onError(error)
-            }
+        switch message {
+        case is String:
+            let frame = try self.frame.create(data: (message as! String).data(using: .utf8)!, opcode: .string)
+            transfer.send(data: frame)
 
-        case is Data.Type:
-            do {
+        case is Data:
                 let frame = try self.frame.create(data: message as! Data, opcode: .binary)
                 transfer.send(data: frame)
-            } catch {
-                self.onError(error)
-            }
 
         default:
             break
@@ -126,7 +118,7 @@ private extension FastSocket {
             guard let self = self else {
                 return
             }
-            switch self.mutexLock {
+            switch self.isLocked {
             case true:
                 do {
                     try self.frame.parse(data: data)
@@ -137,10 +129,9 @@ private extension FastSocket {
             case false:
                 guard data.first == Opcode.accept.rawValue else {
                     self.onError(FastSocketError.handShakeFailed)
-                    self.onError(FastSocketError.socketUnexpectedClosed)
                     return
                 }
-                self.mutexLock = true
+                self.isLocked = true
                 self.stopTimeout()
                 self.on.ready()
             }

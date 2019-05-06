@@ -18,7 +18,7 @@ internal class NetworkTransfer: TransferProtocol {
     private var monitor = NWPathMonitor()
     private var queue: DispatchQueue
     private var isRunning: Bool = false
-    private var mutexLock: Bool = false
+    private var isLocked: Bool = false
     private var connectionState: NWConnection.State = .cancelled
     /// create a instance of NetworkTransfer
     /// - parameters:
@@ -26,7 +26,7 @@ internal class NetworkTransfer: TransferProtocol {
     ///     - port: the port to connect, e.g.: 8000
     ///     - parameters: Network.framework Parameters `optional`
     ///     - queue: Dispatch Qeue `optional`
-    required init(host: String, port: UInt16, parameters: NWParameters = NWParameters(tls: nil), queue: DispatchQueue = DispatchQueue(label: "network.transfer.\(UUID().uuidString)", qos: .userInitiated)) {
+    required init(host: String, port: UInt16, parameters: NWParameters = NWParameters(tls: nil), queue: DispatchQueue = DispatchQueue(label: "\(Constant.prefixNetwork)\(UUID().uuidString)", qos: .userInitiated)) {
         self.connection = NWConnection(host: NWEndpoint.Host(host), port: NWEndpoint.Port(rawValue: port)!, using: parameters)
         self.queue = queue
     }
@@ -57,7 +57,7 @@ internal class NetworkTransfer: TransferProtocol {
             guard let self = self else {
                 return
             }
-            guard !self.mutexLock else {
+            guard !self.isLocked else {
                 self.on.error(FastSocketError.writeBeforeClear)
                 return
             }
@@ -65,12 +65,13 @@ internal class NetworkTransfer: TransferProtocol {
                 self.on.error(FastSocketError.sendToEarly)
                 return
             }
-            self.mutexLock = true
+            self.isLocked = true
             let queued = data.chunked(by: Constant.maximumLength)
             guard !queued.isEmpty else {
                 return
             }
-            for (i, data) in queued.enumerated() {
+            var itterator = queued.enumerated().makeIterator()
+            while let (i, data) = itterator.next() {
                 self.connection.send(content: Data(data), completion: .contentProcessed({ error in
                     if let error = error {
                         guard error != NWError.posix(.ECANCELED) else {
@@ -82,7 +83,7 @@ internal class NetworkTransfer: TransferProtocol {
                     }
                     self.on.dataWritten(data.count)
                     if i == queued.endIndex - 1 {
-                        self.mutexLock = false
+                        self.isLocked = false
                     }
                 }))
             }
@@ -134,7 +135,7 @@ private extension NetworkTransfer {
             self.clean()
             self.on.error(FastSocketError.networkUnreachable)
         }
-        self.monitor.start(queue: DispatchQueue(label: "network.path.\(UUID().uuidString)", qos: .userInitiated))
+        self.monitor.start(queue: DispatchQueue(label: "\(Constant.prefixNetwork)\(UUID().uuidString)", qos: .userInitiated))
     }
     /// readloop for the tcp socket incoming data
     private func readLoop() {

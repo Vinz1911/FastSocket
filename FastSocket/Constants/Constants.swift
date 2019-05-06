@@ -14,6 +14,10 @@ internal enum Constant {
     static let maximumLength: Int = 8192
     /// the FastSocket ID used by the handshake
     static let socketID: String = "6D8EDFD9-541C-4391-9171-AD519876B32E"
+    /// queue prefix for network
+    static let prefixNetwork = "network.dispatch."
+    /// queue prefix for timer
+    static let prefixTimer = "timer.dispatch"
     /// timeout time
     static let timeout: TimeInterval = 5.0
     /// maximum content size
