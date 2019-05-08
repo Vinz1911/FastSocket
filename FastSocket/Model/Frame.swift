@@ -36,6 +36,7 @@ internal final class Frame: FrameProtocol {
         }
         return outputFrame
     }
+    /// TODO: HIGH PERFORMANCE IMPACT LOLOLOLOL
     /// parse a FastSocket Protocol compliant messsage back to it's raw data
     /// - parameters:
     ///     - data: the received data
@@ -47,27 +48,32 @@ internal final class Frame: FrameProtocol {
         if self.readBuffer.count > Constant.maximumContentLength {
             throw (FastSocketError.readBufferOverflow)
         }
-        guard data.last == Opcode.finish.rawValue else {
-            // Do nothing, keep reading, keep walking
+        guard self.readBuffer.contains(Opcode.finish.rawValue) else {
             return
         }
-        guard let opcode = self.readBuffer.first else {
+        let splitted = self.readBuffer.split(separator: Opcode.finish.rawValue, maxSplits: 1, omittingEmptySubsequences: false)
+        guard let frame = splitted.first else {
+            throw FastSocketError.parsingFailure
+        }
+        guard let opcode = frame.first else {
             throw FastSocketError.readBufferIssue
         }
         switch opcode {
         case Opcode.string.rawValue:
-            guard let string = String(bytes: self.trimmedFrame(), encoding: .utf8) else {
+            guard let string = String(bytes: frame.dropFirst(), encoding: .utf8) else {
                 throw FastSocketError.parsingFailure
             }
             self.on.stringFrame(string)
 
         case Opcode.binary.rawValue:
-            self.on.dataFrame(self.trimmedFrame())
+            self.on.dataFrame(frame.dropFirst())
 
         default:
             throw FastSocketError.unknownOpcode
         }
-        self.initializeBuffer()
+        if let last = splitted.last {
+            self.readBuffer = last
+        }
     }
 }
 

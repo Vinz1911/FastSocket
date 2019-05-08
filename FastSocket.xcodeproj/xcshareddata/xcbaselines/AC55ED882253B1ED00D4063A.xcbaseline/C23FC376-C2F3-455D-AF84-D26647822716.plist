@@ -6,6 +6,16 @@
 	<dict>
 		<key>FastSocketTests</key>
 		<dict>
+			<key>testMeasureParser()</key>
+			<dict>
+				<key>com.apple.XCTPerformanceMetric_WallClockTime</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>0.00014202</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>Local Baseline</string>
+				</dict>
+			</dict>
 			<key>testSlicer()</key>
 			<dict>
 				<key>com.apple.XCTPerformanceMetric_WallClockTime</key>
