@@ -4,19 +4,25 @@
 //
 //  Created by Vinzenz Weist on 25.03.19.
 //  Copyright © 2019 Vinzenz Weist. All rights reserved.
-//
-// 0                 1                              N                 N
-// +-----------------+------------------------------+-----------------+
-// |0 1 2 3 4 5 6 7 8|        ... Continue          |0 1 2 3 4 5 6 7 8|
-// +-----------------+------------------------------+-----------------+
-// |   O P C O D E   |         Payload Data...      |  F I N B Y T E  |
-// +-----------------+------------------------------+-----------------+
-//
 import Foundation
+
+// 0                   1       N
+// +-------------------+-------+
+// |0|1|2 3 4 5 6 7 8 9|0 1 2 3|
+// +-+-+---------------+-------+
+// |F|O| Payload length|PAYLOAD|
+// |I|P|      (8)      |  (N)  |
+// |N|C|               |       |
+// +-+-+---------------+-------+
+// : Payload Data continued ...:
+// + - - - - - - - - - - - - - +
+// | Payload Data continued ...|
+// +---------------------------+
+
 /// Frame is a helper class for the FastSocket Protocol
 /// it is used to create new message frames or to parse
 /// received Data back to it's raw type
-internal final class Frame: FrameProtocol {
+internal final class Frame {
     internal var on = FrameClosures()
     private var readBuffer = Data()
 
@@ -26,11 +32,17 @@ internal final class Frame: FrameProtocol {
     /// - parameters:
     ///     - data: the data that should be send
     ///     - opcode: the frames Opcode, e.g. .binary or .text
-    internal func create(data: Data, opcode: Opcode) throws -> Data {
+    internal func create(data: Data, opcode: Opcode, isFin: Bool = false) throws -> Data {
         var outputFrame = Data()
+        let payloadLengthBytes = (data.count + Constant.overheadSize).toData()
+        if isFin {
+            outputFrame.append(Opcode.finish.rawValue)
+        } else {
+            outputFrame.append(Opcode.continue.rawValue)
+        }
         outputFrame.append(opcode.rawValue)
+        outputFrame.append(payloadLengthBytes)
         outputFrame.append(data)
-        outputFrame.append(Opcode.finish.rawValue)
         guard outputFrame.count <= Constant.maximumContentLength else {
             throw FastSocketError.writeBufferOverflow
         }
@@ -41,44 +53,48 @@ internal final class Frame: FrameProtocol {
     ///     - data: the received data
     internal func parse(data: Data) throws {
         guard !data.isEmpty else {
-            throw FastSocketError.zeroData
-        }
-        self.readBuffer.append(data)
-        if self.readBuffer.count > Constant.maximumContentLength {
-            throw (FastSocketError.readBufferOverflow)
-        }
-        guard data.last == Opcode.finish.rawValue else {
-            // Do nothing, keep reading, keep walking
             return
         }
-        guard let opcode = self.readBuffer.first else {
-            throw FastSocketError.readBufferIssue
+        self.readBuffer.append(data)
+        guard self.readBuffer.count <= Constant.maximumContentLength else {
+            throw FastSocketError.readBufferOverflow
         }
-        switch opcode {
+        guard self.readBuffer.count >= Constant.overheadSize else {
+            return
+        }
+        guard self.readBuffer.count >= self.contentSize() else {
+            //keep reading, keep walking...
+            return
+        }
+        let slice = Data(self.readBuffer[0...self.contentSize() - 1])
+        switch slice[1] {
         case Opcode.string.rawValue:
-            guard let string = String(bytes: self.trimmedFrame(), encoding: .utf8) else {
-                throw FastSocketError.parsingFailure
+            guard let string = String(bytes: self.trimmFrame(frame: slice), encoding: .utf8) else {
+                return
             }
             self.on.stringFrame(string)
 
         case Opcode.binary.rawValue:
-            self.on.dataFrame(self.trimmedFrame())
+            self.on.dataFrame(self.trimmFrame(frame: slice))
 
         default:
             throw FastSocketError.unknownOpcode
         }
-        self.initializeBuffer()
+        if self.readBuffer.count > self.contentSize() {
+            self.readBuffer = Data(self.readBuffer[self.contentSize()...])
+        } else {
+            self.readBuffer = Data()
+        }
     }
 }
 
 private extension Frame {
-    /// helper function to parse the frame
-    private func trimmedFrame() -> Data {
-        let inputFrame = self.readBuffer[1...self.readBuffer.count - 2]
-        return inputFrame
+    private func contentSize() -> Int {
+        let size = Data(self.readBuffer[2...9])
+        return Array(size).toInt()
     }
-    /// helper function to create readable frame
-    private func initializeBuffer() {
-        self.readBuffer = Data()
+    private func trimmFrame(frame: Data) -> Data {
+        let data = Data(frame[10...])
+        return data
     }
 }
