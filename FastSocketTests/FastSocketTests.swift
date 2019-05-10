@@ -71,7 +71,7 @@ class FastSocketTests: XCTestCase {
     
     func testClose() {
         let exp = expectation(description: "Wait for connection close")
-        let socket = FastSocket(host: "socket.weist.it", port: 8080)
+        let socket = FastSocket(host: "localhost", port: 8080)
         socket.on.ready = {
             socket.disconnect()
         }
@@ -97,8 +97,9 @@ class FastSocketTests: XCTestCase {
     // TODO: NOT WORKING AFTER REFACTORING OF PARSER
     func testFrameErrorUnknown() {
         let frame = Frame()
-        var data = Data(count: 2)
+        var data = Data(count: 20)
         data[1] = 0x3
+        data[2] = 20
         XCTAssertThrowsError(try frame.parse(data: data)) { error in
             XCTAssertEqual(error as! FastSocketError, FastSocketError.unknownOpcode)
         }

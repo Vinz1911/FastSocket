@@ -52,7 +52,7 @@ internal final class Frame {
     ///     - data: the received data
     internal func parse(data: Data) throws {
         guard !data.isEmpty else {
-            return
+            throw FastSocketError.zeroData
         }
         self.readBuffer.append(data)
         guard self.readBuffer.count <= Constant.maximumContentLength else {
