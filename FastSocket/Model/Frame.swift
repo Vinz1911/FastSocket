@@ -68,13 +68,13 @@ internal final class Frame {
             let slice = Data(self.readBuffer[0...self.contentSize() - 1])
             switch slice[1] {
             case Opcode.string.rawValue:
-                guard let string = String(bytes: self.trimmFrame(frame: slice), encoding: .utf8) else {
+                guard let string = String(bytes: try self.trimFrame(frame: slice), encoding: .utf8) else {
                     return
                 }
                 self.on.stringFrame(string)
 
             case Opcode.binary.rawValue:
-                self.on.dataFrame(self.trimmFrame(frame: slice))
+                self.on.dataFrame(try self.trimFrame(frame: slice))
 
             default:
                 throw FastSocketError.unknownOpcode
@@ -102,7 +102,10 @@ private extension Frame {
     /// private func to trimm frame to it's raw content
     /// - parameters:
     ///     - frame: the data to trimm
-    private func trimmFrame(frame: Data) -> Data {
+    private func trimFrame(frame: Data) throws -> Data {
+        guard frame.count >= Constant.overheadSize else {
+            throw FastSocketError.parsingFailure
+        }
         let data = Data(frame[10...])
         return data
     }
