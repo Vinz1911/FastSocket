@@ -59,7 +59,7 @@ internal class NetworkTransfer: TransferProtocol {
             }
             // TODO: for testing dont enable code!
             // this code prevent from multiple send of data at once
-            // this feature is now possible, but for release, i will block this for now
+            // this feature is now possible, but in release versions, i will block this for now
             // later we will allow this after loooooooooot of testing
 //            guard !self.isLocked else {
 //                self.on.error(FastSocketError.writeBeforeClear)
