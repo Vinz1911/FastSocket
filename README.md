@@ -21,6 +21,11 @@
 - [X] custom error management
 - [X] all errors are routed through the error closure
 - [X] maximum frame size 16777216 bytes (with overhead)
+- [X] content length base framing instead of fin byte termination
+- [X] send/receive multiple messages at once -> **works but currently blocked in the framework**
+
+## **Note:**
+**All versions with 0.5.0 or less will not work with the current backend because we redesigned the protocol and the framing to give the ability to send and receive multiple messages at once. But for now the feature is blocked in the framework**
 
 ## License:
 [![LICENSE](https://img.shields.io/badge/license-GPLv3-blue.svg?longCache=true&style=flat-square)](https://github.com/Vinz1911/FastSocket/blob/master/LICENSE)

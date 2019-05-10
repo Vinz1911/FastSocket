@@ -57,10 +57,14 @@ internal class NetworkTransfer: TransferProtocol {
             guard let self = self else {
                 return
             }
-            guard !self.isLocked else {
-                self.on.error(FastSocketError.writeBeforeClear)
-                return
-            }
+            // TODO: for testing dont enable code!
+            // this code prevent from multiple send of data at once
+            // this feature is now possible, but for release, i will block this for now
+            // later we will allow this after loooooooooot of testing
+//            guard !self.isLocked else {
+//                self.on.error(FastSocketError.writeBeforeClear)
+//                return
+//            }
             guard self.connectionState == .ready else {
                 self.on.error(FastSocketError.sendToEarly)
                 return
