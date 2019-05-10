@@ -15,7 +15,8 @@ internal protocol FrameProtocol {
     /// - parameters:
     ///     - data: the data that should be send
     ///     - opcode: the frames Opcode, e.g. .binary or .text
-    func create(data: Data, opcode: Opcode) throws -> Data
+    ///     - isFin: send a close frame to the host default is false
+    func create(data: Data, opcode: Opcode, isFin: Bool) throws -> Data
     /// parse a FastSocket Protocol compliant messsage back to it's raw data
     /// - parameters:
     ///     - data: the received data

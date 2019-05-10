@@ -21,7 +21,7 @@ import Foundation
 /// Frame is a helper class for the FastSocket Protocol
 /// it is used to create new message frames or to parse
 /// received Data back to it's raw type
-internal final class Frame {
+internal final class Frame: FrameProtocol {
     internal var on = FrameClosures()
     private var readBuffer = Data()
 
@@ -69,7 +69,7 @@ internal final class Frame {
             switch slice[1] {
             case Opcode.string.rawValue:
                 guard let string = String(bytes: try self.trimFrame(frame: slice), encoding: .utf8) else {
-                    return
+                    throw FastSocketError.parsingFailure
                 }
                 self.on.stringFrame(string)
 
