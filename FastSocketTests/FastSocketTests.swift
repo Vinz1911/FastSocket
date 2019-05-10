@@ -68,7 +68,7 @@ class FastSocketTests: XCTestCase {
         socket.connect()
         wait(for: [exp], timeout: 10.0)
     }
-    
+    #if DEBUG
     func testMultipleAndReceiveSend() {
         let exp = expectation(description: "Wait for speed test to finish")
         let buffer = Data(count: 100)
@@ -99,7 +99,7 @@ class FastSocketTests: XCTestCase {
         wait(for: [exp], timeout: 10.0)
 
     }
-    
+    #endif
     func testClose() {
         let exp = expectation(description: "Wait for connection close")
         let socket = FastSocket(host: "socket.weist.it", port: 8080)
