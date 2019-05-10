@@ -13,7 +13,7 @@ import Network
 class FastSocketTests: XCTestCase {
     var timer: DispatchSourceTimer?
     
-    func testDownload() {
+    func testStringSendAndRespond() {
         let exp = expectation(description: "Wait for speed test to finish")
         let buffer = "50000"
         var datacount = 0
@@ -41,7 +41,7 @@ class FastSocketTests: XCTestCase {
         wait(for: [exp], timeout: 10.0)
     }
 
-    func testUpload() {
+    func testDataSendAndRespond() {
         let exp = expectation(description: "Wait for speed test to finish")
         let buffer = Data(count: 50000)
         var datacount = 0
@@ -67,6 +67,37 @@ class FastSocketTests: XCTestCase {
         }
         socket.connect()
         wait(for: [exp], timeout: 10.0)
+    }
+    
+    func testMultipleAndReceiveSend() {
+        let exp = expectation(description: "Wait for speed test to finish")
+        let buffer = Data(count: 100)
+        var messages = 0
+        let sendValue = 100
+        let socket = FastSocket(host: "localhost", port: 8080)
+        socket.on.ready = {
+            for _ in 1...100 {
+                socket.send(message: buffer)
+            }
+        }
+        socket.on.string = { text in
+            print("RECEIVED THIS COUNT: \(text)")
+            messages += 1
+            print("Responded Times: \(messages)")
+            if messages == sendValue {
+                exp.fulfill()
+            }
+        }
+        socket.on.close = {
+            print("connection closed")
+        }
+        socket.on.error = { error in
+            guard let error = error else { return }
+            XCTFail("Failed with Error: \(error)")
+        }
+        socket.connect()
+        wait(for: [exp], timeout: 10.0)
+
     }
     
     func testClose() {
