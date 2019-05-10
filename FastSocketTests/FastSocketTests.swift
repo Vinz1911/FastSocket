@@ -17,7 +17,7 @@ class FastSocketTests: XCTestCase {
         let exp = expectation(description: "Wait for speed test to finish")
         let buffer = "50000"
         var datacount = 0
-        let socket = FastSocket(host: "localhost", port: 8080)
+        let socket = FastSocket(host: "socket.weist.it", port: 8080)
         socket.on.ready = {
             socket.send(message: buffer)
         }
@@ -45,7 +45,7 @@ class FastSocketTests: XCTestCase {
         let exp = expectation(description: "Wait for speed test to finish")
         let buffer = Data(count: 50000)
         var datacount = 0
-        let socket = FastSocket(host: "localhost", port: 8080)
+        let socket = FastSocket(host: "socket.weist.it", port: 8080)
         socket.on.ready = {
             socket.send(message: buffer)
         }
@@ -74,7 +74,7 @@ class FastSocketTests: XCTestCase {
         let buffer = Data(count: 100)
         var messages = 0
         let sendValue = 100
-        let socket = FastSocket(host: "localhost", port: 8080)
+        let socket = FastSocket(host: "socket.weist.it", port: 8080)
         socket.on.ready = {
             for _ in 1...100 {
                 socket.send(message: buffer)
@@ -102,7 +102,7 @@ class FastSocketTests: XCTestCase {
     
     func testClose() {
         let exp = expectation(description: "Wait for connection close")
-        let socket = FastSocket(host: "localhost", port: 8080)
+        let socket = FastSocket(host: "socket.weist.it", port: 8080)
         socket.on.ready = {
             socket.disconnect()
         }
@@ -117,7 +117,7 @@ class FastSocketTests: XCTestCase {
         socket.connect()
         wait(for: [exp], timeout: 15.0)
     }
-    // TODO: NOT WORKING AFTER REFACTORING OF PARSER
+    
     func testFrameErrorZeroData() {
         let frame = Frame()
         let data = Data(count: 0)
@@ -125,7 +125,7 @@ class FastSocketTests: XCTestCase {
             XCTAssertEqual(error as! FastSocketError, FastSocketError.zeroData)
         }
     }
-    // TODO: NOT WORKING AFTER REFACTORING OF PARSER
+    
     func testFrameErrorUnknown() {
         let frame = Frame()
         var data = Data(count: 20)
