@@ -14,7 +14,7 @@ internal enum Opcode: UInt8 {
     /// text byte for string based messages
     case string = 0x1
     /// binary byte for data bases messages
-    case binary = 0x2
+    case data = 0x2
     /// finish byte is used on every end of a message
     case finish = 0x3
     /// accept byte is used by the handshake

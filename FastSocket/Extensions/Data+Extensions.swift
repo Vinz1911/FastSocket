@@ -18,4 +18,10 @@ internal extension Data {
             Data(Array(self[$0..<Swift.min($0 + size, self.count)]))
         }
     }
+    /// convert big endian to integer
+    func toInt() -> Int {
+        return Int(UInt64(bigEndian: withUnsafeBytes {
+            $0.pointee
+        }))
+    }
 }

@@ -11,7 +11,7 @@ import Network
 /// FastSocket is a proprietary communication protocol directly
 /// written on top of TCP. It's a message based protocol which allows you
 /// to send text and binary based messages. The protocol is so small it have
-/// only 3 Bytes overhead per message, the handshake is done directly on TCP level.
+/// only 10 Bytes overhead per message, the handshake is done directly on TCP level.
 /// The motivation behind this protocol was, to use it as `Speedtest Protocol`, a
 /// low level TCP communication protocol to measure TCP throughput performance. -> FastSocket is the answer
 /// FastSocket allows to enter all possible TCP Options if needed and is completely non-blocking and async, thanks to GCD
@@ -85,7 +85,7 @@ private extension FastSocket {
             transfer.send(data: frame)
 
         case is Data:
-            let frame = try self.frame.create(data: message as! Data, opcode: .binary)
+            let frame = try self.frame.create(data: message as! Data, opcode: .data)
             transfer.send(data: frame)
 
         default:

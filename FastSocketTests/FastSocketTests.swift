@@ -12,12 +12,14 @@ import Network
 
 class FastSocketTests: XCTestCase {
     var timer: DispatchSourceTimer?
+    var host: String = "socket.weist.it"
+    var port: UInt16 = 8080
     
     func testStringSendAndRespond() {
         let exp = expectation(description: "Wait for speed test to finish")
         let buffer = "50000"
         var datacount = 0
-        let socket = FastSocket(host: "socket.weist.it", port: 8080)
+        let socket = FastSocket(host: self.host, port: self.port)
         socket.on.ready = {
             socket.send(message: buffer)
         }
@@ -45,7 +47,7 @@ class FastSocketTests: XCTestCase {
         let exp = expectation(description: "Wait for speed test to finish")
         let buffer = Data(count: 50000)
         var datacount = 0
-        let socket = FastSocket(host: "socket.weist.it", port: 8080)
+        let socket = FastSocket(host: self.host, port: self.port)
         socket.on.ready = {
             socket.send(message: buffer)
         }
@@ -74,7 +76,7 @@ class FastSocketTests: XCTestCase {
         let buffer = Data(count: 100)
         var messages = 0
         let sendValue = 100
-        let socket = FastSocket(host: "socket.weist.it", port: 8080)
+        let socket = FastSocket(host: self.host, port: self.port)
         socket.on.ready = {
             for _ in 1...100 {
                 socket.send(message: buffer)
@@ -102,7 +104,7 @@ class FastSocketTests: XCTestCase {
     #endif
     func testClose() {
         let exp = expectation(description: "Wait for connection close")
-        let socket = FastSocket(host: "socket.weist.it", port: 8080)
+        let socket = FastSocket(host: self.host, port: self.port)
         socket.on.ready = {
             socket.disconnect()
         }
@@ -130,7 +132,7 @@ class FastSocketTests: XCTestCase {
         let frame = Frame()
         var data = Data(count: 20)
         data[1] = 0x3
-        data[2] = 20
+        data[9] = 20
         XCTAssertThrowsError(try frame.parse(data: data)) { error in
             XCTAssertEqual(error as! FastSocketError, FastSocketError.unknownOpcode)
         }
@@ -139,7 +141,7 @@ class FastSocketTests: XCTestCase {
     func testFrameErrorOverflow() {
         let frame = Frame()
         let data = Data(count: 17000000)
-        XCTAssertThrowsError(try frame.create(data: data, opcode: .binary)) { error in
+        XCTAssertThrowsError(try frame.create(data: data, opcode: .data)) { error in
             XCTAssertEqual(error as! FastSocketError, FastSocketError.writeBufferOverflow)
         }
     }
@@ -169,7 +171,7 @@ class FastSocketTests: XCTestCase {
     }
     
     func testSendStringError() {
-        let socket = FastSocket(host: "socket.weist.it", port: 8080)
+        let socket = FastSocket(host: self.host, port: self.port)
         socket.on.error = { error in
             XCTAssertEqual(error as! FastSocketError, FastSocketError.sendToEarly)
         }
@@ -177,7 +179,7 @@ class FastSocketTests: XCTestCase {
     }
     
     func testSendDataError() {
-        let socket = FastSocket(host: "socket.weist.it", port: 8080)
+        let socket = FastSocket(host: self.host, port: self.port)
         socket.on.error = { error in
             XCTAssertEqual(error as! FastSocketError, FastSocketError.sendToEarly)
         }

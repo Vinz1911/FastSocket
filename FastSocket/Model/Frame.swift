@@ -30,11 +30,12 @@ internal final class Frame: FrameProtocol {
     /// create a FastSocket Protocol compliant message frame
     /// - parameters:
     ///     - data: the data that should be send
-    ///     - opcode: the frames Opcode, e.g. .binary or .text
-    internal func create(data: Data, opcode: Opcode, isFin: Bool = false) throws -> Data {
+    ///     - opcode: the frames Opcode, e.g. .string or .data
+    ///     - isFin: send a close frame to the host default is false
+    internal func create(data: Data, opcode: Opcode, isFinal: Bool = false) throws -> Data {
         var outputFrame = Data()
         let payloadLengthBytes = (data.count + Constant.overheadSize).toData()
-        if isFin {
+        if isFinal {
             outputFrame.append(Opcode.finish.rawValue)
         } else {
             outputFrame.append(Opcode.continue.rawValue)
@@ -73,7 +74,7 @@ internal final class Frame: FrameProtocol {
                 }
                 self.on.stringFrame(string)
 
-            case Opcode.binary.rawValue:
+            case Opcode.data.rawValue:
                 self.on.dataFrame(try self.trimFrame(frame: slice))
 
             default:
@@ -97,7 +98,7 @@ private extension Frame {
             return 0
         }
         let size = Data(self.readBuffer[2...9])
-        return Array(size).toInt()
+        return size.toInt()
     }
     /// private func to trimm frame to it's raw content
     /// - parameters:

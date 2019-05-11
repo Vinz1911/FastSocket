@@ -8,11 +8,10 @@
 
 import Foundation
 internal extension Int {
-    /// convert an integer value with LittleEndianUint64
+    /// convert an integer value with BigEndianUint64
     /// to an Data array
     func toData() -> Data {
-        var integer = self
-        return withUnsafeBytes(of: &integer) {
+        return withUnsafeBytes(of: UInt64(bigEndian: UInt64(self))) {
             Data(Array($0))
         }
     }

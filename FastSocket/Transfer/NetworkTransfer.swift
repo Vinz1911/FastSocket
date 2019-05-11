@@ -16,10 +16,10 @@ internal class NetworkTransfer: TransferProtocol {
     internal var on = TransferClosures()
     private var connection: NWConnection
     private var monitor = NWPathMonitor()
+    private var connectionState: NWConnection.State?
     private var queue: DispatchQueue
     private var isRunning: Bool = false
     private var isLocked: Bool = false
-    private var connectionState: NWConnection.State = .cancelled
     /// create a instance of NetworkTransfer
     /// - parameters:
     ///     - host: a server endpoint to connect, e.g.: "example.com"
@@ -151,7 +151,7 @@ private extension NetworkTransfer {
             guard self.isRunning else {
                 return
             }
-            self.connection.receive(minimumIncompleteLength: Constant.minimumIncompleteLength, maximumLength: Constant.maximumLength) { [weak self] data, context, isComplete, error in
+            self.connection.receive(minimumIncompleteLength: Constant.minimumIncompleteLength, maximumLength: Constant.maximumLength) { [weak self] data, _, isComplete, error in
                 guard let self = self else {
                     return
                 }
@@ -167,12 +167,12 @@ private extension NetworkTransfer {
                     self.on.data(data)
                     self.on.dataRead(data.count)
                 }
-                if isComplete && data == nil, context == nil, error == nil {
+                switch isComplete {
+                case true:
                     self.clean()
                     self.on.close()
-                    return
-                }
-                if !isComplete {
+
+                case false:
                     self.readLoop()
                 }
             }
