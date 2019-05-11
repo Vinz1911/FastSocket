@@ -31,7 +31,7 @@ internal final class Frame: FrameProtocol {
     /// - parameters:
     ///     - data: the data that should be send
     ///     - opcode: the frames Opcode, e.g. .string or .data
-    ///     - isFin: send a close frame to the host default is false
+    ///     - isFinal: send a close frame to the host default is false
     internal func create(data: Data, opcode: Opcode, isFinal: Bool = false) throws -> Data {
         var outputFrame = Data()
         let payloadLengthBytes = (data.count + Constant.overheadSize).toData()
