@@ -7,12 +7,12 @@
 //
 
 import Foundation
-internal extension Int {
+internal extension UInt64 {
     /// convert an integer value with BigEndianUint64
     /// to an Data array
-    func toData() -> Data {
-        return withUnsafeBytes(of: UInt64(bigEndian: UInt64(self))) {
-            Data($0)
+    func data() -> Data {
+        return withUnsafeBytes(of: UInt64(bigEndian: self)) { bytes in
+            Data(bytes)
         }
     }
 }

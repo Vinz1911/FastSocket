@@ -13,15 +13,18 @@ internal extension Data {
     /// slice data into chunks:
     /// - parameters:
     ///     - size: size of the sliced chunks
-    func chunked(by size: Int) -> [Data] {
-        return stride(from: 0, to: self.count, by: size).map {
-            Data(Array(self[$0..<Swift.min($0 + size, self.count)]))
+    func chunk(by size: Int) -> [Data] {
+        return stride(from: 0, to: self.count, by: size).map { count in
+            Data(self[count..<Swift.min(count + size, self.count)])
         }
     }
-    /// convert big endian to integer
-    func toInt() -> Int {
-        return Int(UInt64(bigEndian: withUnsafeBytes {
-            $0.load(as: UInt64.self)
-        }))
+    /// convert big endian to uint64
+    func int() -> UInt64 {
+        guard !self.isEmpty else {
+            return 0
+        }
+        return UInt64(bigEndian: withUnsafeBytes { bytes in
+            bytes.load(as: UInt64.self)
+        })
     }
 }

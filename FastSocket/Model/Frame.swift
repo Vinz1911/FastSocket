@@ -52,7 +52,7 @@ internal final class Frame: FrameProtocol {
     ///     - isFinal: send a close frame to the host default is false
     internal func create(data: Data, opcode: Opcode, isFinal: Bool = false) throws -> Data {
         var outputFrame = Data()
-        let payloadLengthBytes = (data.count + Constant.overheadSize).toData()
+        let payloadLengthBytes = UInt64(data.count + Constant.overheadSize).data()
         if isFinal {
             outputFrame.append(Opcode.finish.rawValue)
         } else {
@@ -111,12 +111,12 @@ private extension Frame {
     /// private function to get parse the overhead size of a frame
     /// - parameters:
     ///     - data: data to extract content size from
-    private func contentSize() -> Int {
+    private func contentSize() -> UInt64 {
         guard self.readBuffer.count >= Constant.overheadSize else {
             return 0
         }
         let size = Data(self.readBuffer[2...9])
-        return size.toInt()
+        return size.int()
     }
     /// private func to trimm frame to it's raw content
     /// - parameters:
