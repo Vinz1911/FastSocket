@@ -26,7 +26,7 @@ internal class NetworkTransfer: TransferProtocol {
     ///     - port: the port to connect, e.g.: 8000
     ///     - parameters: Network.framework Parameters `optional`
     ///     - queue: Dispatch Qeue `optional`
-    required init(host: String, port: UInt16, parameters: NWParameters = NWParameters(tls: nil), queue: DispatchQueue = DispatchQueue(label: "\(Constant.prefixNetwork)\(UUID().uuidString)", qos: .userInitiated)) {
+    required init(host: String, port: UInt16, parameters: NWParameters = .tcp, queue: DispatchQueue = DispatchQueue(label: "\(Constant.prefixNetwork)\(UUID().uuidString)", qos: .userInitiated)) {
         self.connection = NWConnection(host: NWEndpoint.Host(host), port: NWEndpoint.Port(rawValue: port)!, using: parameters)
         self.queue = queue
     }

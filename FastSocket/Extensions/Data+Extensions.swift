@@ -21,7 +21,7 @@ internal extension Data {
     /// convert big endian to integer
     func toInt() -> Int {
         return Int(UInt64(bigEndian: withUnsafeBytes {
-            $0.pointee
+            $0.load(as: UInt64.self)
         }))
     }
 }

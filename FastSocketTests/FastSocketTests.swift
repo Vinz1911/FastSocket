@@ -78,7 +78,7 @@ class FastSocketTests: XCTestCase {
         let sendValue = 100
         let socket = FastSocket(host: self.host, port: self.port)
         socket.on.ready = {
-            for _ in 1...100 {
+            for _ in 1...sendValue {
                 socket.send(message: buffer)
             }
         }

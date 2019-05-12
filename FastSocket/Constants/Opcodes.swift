@@ -19,9 +19,5 @@ internal enum Opcode: UInt8 {
     case finish = 0x3
     /// accept byte is used by the handshake
     case accept = 0x6
-    /// 0x07 reserved
-    /// connectionClose byte to determine if the backend has
-    /// closed the connection
-    case connectionClose = 0x8
-    /// 0x9 - 0xF
+    /// 0x07 - 0xF reserved
 }

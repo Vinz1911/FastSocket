@@ -17,7 +17,7 @@ import Network
 /// FastSocket allows to enter all possible TCP Options if needed and is completely non-blocking and async, thanks to GCD
 public final class FastSocket: FastSocketProtocol {
     public var on = FastSocketClosures()
-    public var parameters = NWParameters(tls: nil)
+    public var parameters: NWParameters = .tcp
     private var host: String
     private var port: UInt16
     private var frame = Frame()

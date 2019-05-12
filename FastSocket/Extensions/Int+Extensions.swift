@@ -12,7 +12,7 @@ internal extension Int {
     /// to an Data array
     func toData() -> Data {
         return withUnsafeBytes(of: UInt64(bigEndian: UInt64(self))) {
-            Data(Array($0))
+            Data($0)
         }
     }
 }
