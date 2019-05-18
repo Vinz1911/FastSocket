@@ -23,7 +23,7 @@
 - [X] maximum frame size 16777216 bytes (with overhead)
 - [X] content length base framing instead of fin byte termination
 - [X] send/receive multiple messages at once (currently only in debug mode)
-- [X] **TLS support with the ability to allow untrusted certificates**
+- [X] TLS support with the ability to allow untrusted certificates
 
 ## **Note:**
 **All versions with 0.5.0 or less will not work with the current backend because we redesigned the protocol and the framing to give the ability to send and receive multiple messages at once. But for now the feature is blocked in the framework**
@@ -36,11 +36,10 @@
 
 ## Build Status:
 
-|      Branch      |                                                                                                         Build Status                                                                                                        |                                                                            Coverage                                                                           |
-|:----------------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-|      master      | [![CircleCI](https://circleci.com/gh/Vinz1911/FastSocket/tree/master.svg?style=shield&circle-token=d3bc94f649f0ee8087e17007476032517b1eac6a)](https://circleci.com/gh/Vinz1911/FastSocket/tree/master)                      | [![codecov](https://codecov.io/gh/Vinz1911/FastSocket/branch/master/graph/badge.svg?token=1sEt52DskP)](https://codecov.io/gh/Vinz1911/FastSocket)             |
-|      develop     | [![CircleCI](https://circleci.com/gh/Vinz1911/FastSocket/tree/develop.svg?style=shield&circle-token=d3bc94f649f0ee8087e17007476032517b1eac6a)](https://circleci.com/gh/Vinz1911/FastSocket/tree/develop )                   | [![codecov](https://codecov.io/gh/Vinz1911/FastSocket/branch/develop/graph/badge.svg?token=1sEt52DskP)](https://codecov.io/gh/Vinz1911/FastSocket)            |
-
+|  Branch |                                                         Build Status                                                        |                                                                            Coverage                                                                            |                                                                            Maintainability                                                                           |
+|:-------:|:---------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|  master |  [![Build Status](https://travis-ci.org/Vinz1911/FastSocket.svg?branch=master)](https://travis-ci.org/Vinz1911/FastSocket)  | [![Test Coverage](https://api.codeclimate.com/v1/badges/c62326734b98deeefbee/test_coverage)](https://codeclimate.com/github/Vinz1911/FastSocket/test_coverage) | [![Maintainability](https://api.codeclimate.com/v1/badges/c62326734b98deeefbee/maintainability)](https://codeclimate.com/github/Vinz1911/FastSocket/maintainability) |
+| develop | [![Build Status](https://travis-ci.org/Vinz1911/FastSocket.svg?branch=develop )](https://travis-ci.org/Vinz1911/FastSocket) |                                                                                                                                                                |                                                                                                                                                                      |
 
 ## Installation:
 
