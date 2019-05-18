@@ -1,0 +1,32 @@
+# env:
+#   global:
+#     - CC_TEST_REPORTER_ID=1343ef7a8d4b25a8f9569fac0433da48451874d02d2bd33aa682d7d8f0c33a32
+
+# The OSX Image on which the build should be testet
+osx_image: xcode10.2
+
+# the programming language
+language: swift
+
+# select branches
+# branches:
+#  only:
+#    - master
+#    - development
+
+# install pods if there
+podfile: Podfile
+before_install:
+  - gem install slather
+  # - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-darwin-amd64 > ./cc-test-reporter
+  # - chmod +x ./cc-test-reporter
+  # - ./cc-test-reporter before-build
+
+# specific for the porject -> name of project, projects scheme and platform
+xcode_project: FastSocket.xcodeproj
+xcode_scheme: FastSocket
+xcode_destination: platform=iOS Simulator,OS=12.0,name=iPhone X
+
+after_script:
+  - slather
+  # - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

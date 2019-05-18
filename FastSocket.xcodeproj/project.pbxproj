@@ -29,6 +29,7 @@
 		AC55EDA82253B21800D4063A /* NetworkTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC55EDA02253B21800D4063A /* NetworkTransfer.swift */; };
 		AC55EDA92253B21800D4063A /* Opcodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC55EDA22253B21800D4063A /* Opcodes.swift */; };
 		AC55EDAC2253B37C00D4063A /* FastSocket.podspec in Resources */ = {isa = PBXBuildFile; fileRef = AC55EDAB2253B37C00D4063A /* FastSocket.podspec */; };
+		AC6073B322905F5A0087E054 /* .travis.yml in Resources */ = {isa = PBXBuildFile; fileRef = AC6073B222905F5A0087E054 /* .travis.yml */; };
 		AC635E06226549AA00CFFBAD /* FastSocketProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC635E05226549AA00CFFBAD /* FastSocketProtocol.swift */; };
 		AC86306722771B78002C553C /* FrameProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC86306622771B78002C553C /* FrameProtocol.swift */; };
 		AC93AF9C2279EC150038B86D /* Fastfile in Resources */ = {isa = PBXBuildFile; fileRef = AC93AF9B2279EC150038B86D /* Fastfile */; };
@@ -72,6 +73,7 @@
 		AC55EDA02253B21800D4063A /* NetworkTransfer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkTransfer.swift; sourceTree = "<group>"; };
 		AC55EDA22253B21800D4063A /* Opcodes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Opcodes.swift; sourceTree = "<group>"; };
 		AC55EDAB2253B37C00D4063A /* FastSocket.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; fileEncoding = 4; path = FastSocket.podspec; sourceTree = "<group>"; };
+		AC6073B222905F5A0087E054 /* .travis.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
 		AC635E05226549AA00CFFBAD /* FastSocketProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastSocketProtocol.swift; sourceTree = "<group>"; };
 		AC86306622771B78002C553C /* FrameProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameProtocol.swift; sourceTree = "<group>"; };
 		AC93AF9B2279EC150038B86D /* Fastfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; fileEncoding = 4; name = Fastfile; path = fastlane/Fastfile; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 				AC55EDAB2253B37C00D4063A /* FastSocket.podspec */,
 				AC1536F5227341FF00F3A2E2 /* README.md */,
 				AC24FFD0228214CE0025AEDF /* CHANGELOG.md */,
+				AC6073B222905F5A0087E054 /* .travis.yml */,
 			);
 			name = "Podspec+Readme";
 			sourceTree = "<group>";
@@ -317,6 +320,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC6073B322905F5A0087E054 /* .travis.yml in Resources */,
 				AC93AF9C2279EC150038B86D /* Fastfile in Resources */,
 				AC24FFD1228214CE0025AEDF /* CHANGELOG.md in Resources */,
 				AC1536F6227341FF00F3A2E2 /* README.md in Resources */,
