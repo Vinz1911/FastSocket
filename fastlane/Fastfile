@@ -32,15 +32,6 @@ platform :ios do
     UI.message("Performing unit tests")
       # use scan file
       scan
-      
-      # gather coverage after run
-      slather(
-        proj: "FastSocket.xcodeproj",
-        scheme: "FastSocket",
-        source_directory: "./FastSocket",
-        output_directory: "./fastlane/test_output/slather",
-        cobertura_xml: true
-      )
     UI.success("Finished unit tests")
   end
 
