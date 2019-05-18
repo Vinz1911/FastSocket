@@ -1,5 +1,5 @@
 scheme("FastSocket")
-devices(["iPhone 8"])
+devices(["iPhone X"])
 clean(true)
 output_types("html")
 max_concurrent_simulators(1)

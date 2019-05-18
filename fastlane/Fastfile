@@ -41,11 +41,6 @@ platform :ios do
         output_directory: "./fastlane/test_output/slather",
         cobertura_xml: true
       )
-      
-      # after slathering, report to codecov
-      codecov_reporter(
-        token: "91fd39fd-4849-4057-b98a-72039d7c15da"
-      )
     UI.success("Finished unit tests")
   end
 
